@@ -3,7 +3,7 @@
 
 StateX is a state management library for modern web applications with unidirectional data flow and immutable uni-state (just like redux). StateX has specific APIs for seamless integration with [Angular (2 or above)](https://angular.io) and [React](https://facebook.github.io/react/).  StateX is inspired by [refluxjs](https://github.com/reflux/refluxjs) and [redux](http://redux.js.org/).
 
-**Note: StateX was originally written for angular - [ angular-reflux ]( https://github.com/rintoj/angular-reflux ) and later modified for react - [react-reflux]( https://github.com/rintoj/react-reflux ). Both of these packages are being migrated to StateX, will be discontinued after the migration is completed**
+**Note: StateX was originally written for angular - [ angular-reflux ]( https://github.com/rintoj/angular-reflux ) and later modified for react - [react-reflux]( https://github.com/rintoj/react-reflux ). Both of these packages are now migrated to StateX, is discontinued**
 
 - [StateX](#statex)
 - [Architecture](#architecture)
@@ -27,6 +27,8 @@ StateX is a state management library for modern web applications with unidirecti
   * [Angular](#angular)
   * [React](#react)
 - [Immutable Application State](#immutable-application-state)
+- [Migrating from angular-reflux](#migrating-from-angular-reflux)
+- [Migrating from react-reflux](#migrating-from-react-reflux)
 - [Examples](#examples)
 - [About](#about)
   * [Contributing](#contributing)
@@ -431,6 +433,76 @@ resetTodos(state: AppState, action: ResetTodosAction): AppState {
     selectedTodo: undefined
   })
 }
+```
+
+# Migrating from angular-reflux
+
+* Replace `angular-reflux` package with `statex`
+
+```bash
+npm uninstall react-reflux --save
+npm install statex --save
+```
+* Replace imports from `angular-reflux` to `statex/angular`
+
+```ts
+// from
+import { data, DataObserver } from 'angular-reflux'
+
+// to
+import { data, DataObserver } from 'statex/angular'
+```
+
+* Change `@BindAction()` to `@action`
+
+```ts
+// from
+@BindAction()
+addTodo(state: AppState, action: AddTodoAction): AppState {
+  ...
+}
+
+// to
+@action
+addTodo(state: AppState, action: AddTodoAction): AppState {
+  ...
+}
+```
+
+* Change `@BindData()` to `@data()`
+```ts
+// from
+@Component({...})
+export class AppComponent extends DataObserver {
+  @BindData(selectTodos)
+  todos: Todo[]
+}
+
+// to
+@Component({...})
+export class AppComponent extends DataObserver {
+  @data(selectTodos)
+  todos: Todo[]
+}
+```
+
+# Migrating from react-reflux
+
+To migrate to StateX replace the package `react-reflux` with `statex`.
+
+```bash
+npm uninstall react-reflux --save
+npm install statex --save
+```
+
+And change every import statement from `react-reflux` to `statex/react`. That's all
+
+```ts
+// from
+import { data, inject } from 'react-reflux'
+
+// to
+import { data, inject } from 'statex/react'
 ```
 
 # Examples
