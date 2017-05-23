@@ -1,38 +1,61 @@
 
 # StateX
 
-StateX is a state management library for modern web applications with unidirectional data flow and immutable uni-state (just like redux). StateX has specific APIs for seamless integration with [Angular (2 or above)](https://angular.io) and React.  StateX is inspired by [refluxjs](https://github.com/reflux/refluxjs) and [redux](http://redux.js.org/).
+StateX is a state management library for modern web applications with unidirectional data flow and immutable uni-state (just like redux). StateX has specific APIs for seamless integration with [Angular (2 or above)](https://angular.io) and [React](https://facebook.github.io/react/).  StateX is inspired by [refluxjs](https://github.com/reflux/refluxjs) and [redux](http://redux.js.org/).
 
-**Note: StateX was originally written for angular - [ angular-reflux ]( https://github.com/rintoj/angular-reflux ) and later for react - [ react-reflux ]( https://github.com/rintoj/react-reflux ). Both of these packages are being migrated to StateX, will be discontinued after the migration is completed**
+**Note: StateX was originally written for angular - [ angular-reflux ]( https://github.com/rintoj/angular-reflux ) and later modified for react - [react-reflux]( https://github.com/rintoj/react-reflux ). Both of these packages are being migrated to StateX, will be discontinued after the migration is completed**
 
-## Architecture
+- [StateX](#statex)
+- [Architecture](#architecture)
+- [Install](#install)
+- [5 Simple Steps](#5-simple-steps)
+  * [1. Define State](#1-define-state)
+  * [2. Define Action](#2-define-action)
+  * [3. Create Store & Bind Action](#3-create-store--bind-action)
+  * [4. Dispatch Action](#4-dispatch-action)
+  * [5. Consume Data](#5-consume-data)
+- [Integrating with Angular](#integrating-with-angular)
+  * [Create Store - Angular](#create-store---angular)
+  * [Add Stores to Providers List](#add-stores-to-providers-list)
+  * [Consume Data - Angular](#consume-data---angular)
+- [Integrating with React](#integrating-with-react)
+  * [Create Store - React](#create-store---react)
+  * [Import Stores to Application](#import-stores-to-application)
+  * [Consume Data - React](#consume-data---react)
+- [Reducer Functions & Async Tasks](#reducer-functions--async-tasks)
+- [Initialize State & Enable HotLoad](#initialize-state--enable-hotload)
+  * [Angular](#angular)
+  * [React](#react)
+- [Immutable Application State](#immutable-application-state)
+- [Examples](#examples)
+- [About](#about)
+  * [Contributing](#contributing)
+  * [Author](#author)
+  * [Versions](#versions)
+  * [License](#license)
+
+# Architecture
 
 Flux is an architecture for unidirectional data flow. By forcing the data to flow in a single direction, Flux makes it easy to reason *how data-changes will affect the application* depending on what actions have been issued. The components themselves may only update  application-wide data by executing an action to avoid double maintenance nightmares.
 
 ![Flow](./docs/img/uni-flow.png)
 
-* STATE - contains application wide data. Technically this is a single immutable JavaScript object containing every data that an application needs.
+* **STATE** - contains application wide data. Technically this is a single immutable JavaScript object containing every data that an application needs.
 
-* STORES - contain business logic - how an action should transform the application wide data represented by STATE
+* **STORES** - contain business logic - how an action should transform the application wide data represented by `STATE`
 
-* VIEWS - Views must react to the change in STATE. So an event is triggered when STATE changes, which VIEWS can consume to update itself with the new data.
+* **VIEWS** - Views must react to the change in `STATE`. So an event is triggered when `STATE` changes, which `VIEWS` can consume to update itself with the new data.
 
-* ACTIONS - are dispatched whenever a view needs to change application state. The actions contain payload to help store complete the updates.
+* **ACTIONS** - are dispatched whenever a view needs to change application state. The actions contain payload to help store complete the updates.
 
-## Install
+# Install
 ```
 npm install statex --save
 ```
 
-## Usage
+# 5 Simple Steps
 
 StateX works with any modern JavaScript framework, however there are minor differences to how it is implemented for each framework.
-
-* [General Concepts](#5-simple-steps)
-* [Integrating with Angular](#integrating-with-angular)
-* [Integrating with React](#integrating-with-react)
-
-# 5 Simple Steps
 
 ## 1. Define State
 To get the best out of TypeScript, declare an interface that defines the structure of the application-state.
@@ -96,7 +119,7 @@ See framework specific implementation.
 
 ## Create Store - Angular
 
-Use `@BindAction` decorator to bind a reducer function with an Action. The second parameter to the reducer function (`addTodo`) is an action (of type `AddTodoAction`); `@BindAction` uses this information to bind the correct action. Also remember to extend this class from `Store`.
+Use `@action` decorator to bind a reducer function with an Action. The second parameter to the reducer function (`addTodo`) is an action (of type `AddTodoAction`); `@action` uses this information to bind the correct action. Also remember to extend this class from `Store`.
 
 ```ts
 import { Injectable } from '@angular/core'
@@ -114,7 +137,7 @@ export class TodoStore extends Store {
 
 Did you notice `@Injectable()`? Well, stores are injectable modules and uses Angular's dependency injection to instantiate. So take care of adding store to `providers` and to inject into `app.component`.
 
-## Setup Stores & Add to Angular's Dependency Injection
+## Add Stores to Providers List
 
 * Create `STORES` array and a class `Stores` (again injectable) to maintain stores.
 
@@ -139,18 +162,14 @@ export const STORES = [
 
 ```ts
 import { STORES } from './store/todo.store';
-....
 
 @NgModule({
-  ....
   providers: [
-    ...STORES,
-    ...
+    ...STORES
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-
 ```
 
 * And finally, inject `Stores` into your root component (`app.component.ts`)
@@ -160,14 +179,13 @@ export class AppModule { }
   ....
 })
 export class AppComponent {
-
   constructor(private stores: STORES) { }
-
-  ....
 }
 ```
 
 ## Consume Data - Angular
+
+While creating container components, remember to extend it from `DataObserver`. It is essential to instruct Angular Compiler to keep `ngOnInit` and `ngOnDestroy` life cycle events, which can only be achieved by implementing `OnInit` and `OnDestroy` interfaces. `DataObserver` is  responsible for subscribing to state stream when the component is created and for unsubscribing when the component is destroyed.
 
 ```ts
 import { data, DataObserver } from 'statex/angular';
@@ -207,8 +225,6 @@ export class TodoListComponent extends DataObserver {
 }
 ```
 
-Remember to extend your component class from `DataObserver`. It is essential to instruct Angular Compiler to keep `ngOnInit` and `ngOnDestroy` life cycle events, which can only be achieved by implementing `OnInit` and `OnDestroy` interfaces. `DataObserver` is  responsible for subscribing to state stream when the component is created and for unsubscribing when the component is destroyed.
-
 # Integrating with React
 
 ## Create Store - React
@@ -218,7 +234,7 @@ Use `@action` decorator to bind a reducer function with an Action. The second pa
 ```ts
 import { AppState } from '../state';
 import { AddTodoAction } from '../action';
-import { action, store } from 'react-reflux';
+import { action, store } from 'statex/react';
 
 @store
 export class TodoStore {
@@ -230,7 +246,7 @@ export class TodoStore {
 }
 ```
 
-Did you notice `@store`? Well, stores must bind each action with the reducer function at the startup and also must have a singleton instance. Both of these are taken care by `@store` decorator.
+Stores must bind each action with the reducer function at the startup and also must have a singleton instance. Both of these are taken care by `@store` decorator.
 
 ## Import Stores to Application
 
@@ -252,9 +268,11 @@ export class AppComponent extends React.Component<{}, {}> {
 
 ## Consume Data - React
 
+Create `Props` class, add properties decorated with `@data`, and finally inject the `Props` to the container using `@inject` decorator.
+
 ```tsx
 import * as React from 'react'
-import { data, inject } from 'react-reflux'
+import { data, inject } from 'statex/react'
 
 class Props {
 
@@ -299,7 +317,7 @@ export class TodoListComponent extends React.Component<Props, State> {
 }
 ```
 
-## Reducer Functions & Async Tasks
+# Reducer Functions & Async Tasks
 
 Reducer functions can return either of the following
 
@@ -349,11 +367,11 @@ add(state: AppState, action: AddTodoAction): Observable<AppState> {
 }
 ```
 
-## Initialize State & Enable HotLoad
+# Initialize State & Enable HotLoad
 
 You can initialize the app state using the following code.
 
-### Angular
+## Angular
 
 ```ts
 ...
@@ -373,7 +391,7 @@ initialize(INITIAL_STATE, {
 export class AppModule { }
 ```
 
-### React
+## React
 
 ```ts
 ...
@@ -391,7 +409,7 @@ ReactDOM.render(<AppComponent />, document.getElementById('root'))
 
 If you set `hotLoad` to true, every change to the state is preserved in localStorage and re-initialized upon refresh. If a state exists in localStorage `INITIAL_STATE` will be ignored. This is very useful for development builds because developers can return to the same screen after every refresh. Remember the screens must written to react to state (reactive UI) in-order to achieve this. `domain` is an optional string to uniquely identify your application.
 
-## Immutable Application State
+# Immutable Application State
 To take advantage of React's change detection strategy we need to ensure that the state is indeed immutable. This module uses [seamless-immutable](https://github.com/rtfeldman/seamless-immutable) for immutability.
 
 Since application state is immutable, the reducer functions will not be able to update state directly; any attempt to update the state will result in error. Therefore a reducer function should either return a portion of the state that needs change (recommended) or a new application state wrapped in `ReplaceableState`, instead.
@@ -415,6 +433,13 @@ resetTodos(state: AppState, action: ResetTodosAction): AppState {
 }
 ```
 
+# Examples
+
+* [React Application with WebPack & TypeScript](https://github.com/rintoj/statex/tree/master/examples/todo-react-ts)
+* [Angular Application with @angular/cli & AOT](https://github.com/rintoj/statex/tree/master/examples/todo-ng-ts)
+
+# About
+
 ### Hope StateX is helpful to you. Please make sure to checkout my other [projects](https://github.com/rintoj) and [articles](https://medium.com/@rintoj). Enjoy coding!
 
 ## Contributing
@@ -432,7 +457,7 @@ Follow me:
 | [Youtube](https://youtube.com/+RintoJoseMankudy)
 
 ## Versions
-[Check CHANGELOG](https://github.com/rintoj/angular-reflux/blob/master/CHANGELOG.md)
+[Check CHANGELOG](https://github.com/rintoj/statex/blob/master/CHANGELOG.md)
 
 ## License
 ```
