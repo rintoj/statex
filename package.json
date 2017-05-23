@@ -1,12 +1,20 @@
 {
   "name": "statex",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.0",
+  "description": "State management library for modern web applications with unidirectional data flow and immutable uni-state (just like redux)",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Rinto Jose",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rintoj/statex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rintoj/statex/issues"
+  },
+  "homepage": "https://github.com/rintoj/statex#readme"
 }
