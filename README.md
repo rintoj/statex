@@ -9,16 +9,7 @@ StateX is a state management library for modern web applications with unidirecti
 
 Flux is an architecture for unidirectional data flow. By forcing the data to flow in a single direction, Flux makes it easy to reason *how data-changes will affect the application* depending on what actions have been issued. The components themselves may only update  application-wide data by executing an action to avoid double maintenance nightmares.
 
-```bash
-
-    ┏━━━━━━━━━━━━━━━┓                         ┏━━━━━━━━━━━━━━━┓
-  ┏━┻━━━━━━━━━━━━━┓ ┃        STATE          ┏━┻━━━━━━━━━━━━━┓ ┃
-  ┃     STORES    ┣━┛ ━━━━━━━━━━━━━━━━━━━━▶ ┃     VIEWS     ┣━┛
-  ┗━━━━━━━┳━━━━━━━┛                         ┗━━━━━━━┳━━━━━━━┛
-          ▲                                         ┃
-          ┃                 ACTION                  ┃
-          ┗━━━━━━━━━━━━━━━━━━━◀━━━━━━━━━━━━━━━━━━━━━┛
-```
+![Flow](./docs/img/uni-flow.png)
 
 * STATE - contains application wide data. Technically this is a single immutable JavaScript object containing every data that an application needs.
 
