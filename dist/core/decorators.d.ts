@@ -1,4 +1,3 @@
-import { Action } from './action';
 import { Observable } from 'rxjs/Observable';
 import { StateSelector } from './state-selector';
 import { Subscription } from 'rxjs/Subscription';
@@ -28,9 +27,7 @@ export declare function bindData(target: any, key: string, selector: StateSelect
  * @param {PropertyDescriptor} descriptor
  * @returns
  */
-export declare function action(target: any, propertyKey: string, descriptor: PropertyDescriptor): {
-    value: (state: any, action: Action) => Observable<any>;
-};
+export declare function action(target: any, propertyKey: string, descriptor: PropertyDescriptor): Promise<any> | Observable<any> | any;
 /**
  * Add @data meta
  *
@@ -40,13 +37,13 @@ export declare function action(target: any, propertyKey: string, descriptor: Pro
  * @param {any} selector
  * @param {any} bindImmediate
  */
-export declare function addDataMeta(target: any, propertyKey: string, selector: StateSelector, bindImmediate?: boolean): void;
+export declare function data(selector: StateSelector, bindImmediate?: boolean): (target: any, propertyKey: string) => void;
 /**
  * Subscribe to the state events and map it to properties
  *
  * @export
  */
-export declare function subscribe(): void;
+export declare function subscribe(propsClass: any): void;
 /**
  * Unsubscribe from the state changes
  *

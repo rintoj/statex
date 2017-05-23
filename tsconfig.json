@@ -22,6 +22,7 @@
     "compiled",
     "examples",
     "dist",
+    "lib",
     "node_modules"
   ],
   "compileOnSave": false,

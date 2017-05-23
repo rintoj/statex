@@ -28,10 +28,6 @@ export function inject(propsClass: Function) {
 
     return class ObserverComponent extends React.PureComponent<any, any> {
 
-      constructor(props) {
-        super(props)
-      }
-
       componentDidMount() {
         subscribe.bind(this)(propsClass)
       }

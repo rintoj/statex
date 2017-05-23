@@ -3,9 +3,12 @@
   "version": "0.0.0",
   "description": "State management library for modern web applications with unidirectional data flow and immutable uni-state (just like redux)",
   "main": "dist/core/index.js",
+  "types": "dist/core/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "npm run clean && tsc && npm run process",
     "start": "tsc -w",
+    "process": "node ./scripts/process.js",
+    "clean": "node ./scripts/clean.js",
     "test": "mocha dist/**/*.spec.js"
   },
   "keywords": [],
@@ -27,8 +30,11 @@
   "devDependencies": {
     "@types/node": "^7.0.22",
     "@types/react": "^15.0.24",
+    "fs-extra": "^3.0.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "resolvable": "^1.0.1",
+    "rimraf": "^2.6.1",
     "rxjs": "^5.4.0",
     "tslint": "^5.3.2",
     "typescript": "^2.3.3"

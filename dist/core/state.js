@@ -29,8 +29,10 @@ var Observable_1 = require("rxjs/Observable");
  */
 var State = (function () {
     function State() {
+        var _this = this;
         this.currentState = Immutable.from({});
         this.subject = new BehaviorSubject_1.BehaviorSubject(this.currentState);
+        this.subject.subscribe(function (state) { return _this.currentState = state; });
     }
     Object.defineProperty(State, "current", {
         get: function () {

@@ -12,6 +12,11 @@ var state_1 = require("./state");
 function bindData(target, key, selector) {
     return state_1.State.select(selector)
         .subscribe(function (data) {
+        if (typeof target.setState === 'function') {
+            var state = {};
+            state[key] = data;
+            target.setState(state);
+        }
         if (typeof target[key] === 'function')
             return target[key].call(target, data);
         target[key] = data;
@@ -63,26 +68,28 @@ exports.action = action;
  * @param {any} selector
  * @param {any} bindImmediate
  */
-function addDataMeta(target, propertyKey, selector, bindImmediate) {
-    var bindingsMeta = Reflect.getMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, target.constructor);
-    if (!Reflect.hasMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, target.constructor)) {
-        bindingsMeta = { selectors: {}, subscriptions: [], destroyed: !bindImmediate };
-    }
-    bindingsMeta.selectors[propertyKey] = selector;
-    if (bindImmediate) {
-        bindingsMeta.subscriptions.push(bindData(target, propertyKey, selector));
-    }
-    Reflect.defineMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, bindingsMeta, target.constructor);
+function data(selector, bindImmediate) {
+    return function (target, propertyKey) {
+        var bindingsMeta = Reflect.getMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, target.constructor);
+        if (!Reflect.hasMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, target.constructor)) {
+            bindingsMeta = { selectors: {}, subscriptions: [], destroyed: !bindImmediate };
+        }
+        bindingsMeta.selectors[propertyKey] = selector;
+        if (bindImmediate) {
+            bindingsMeta.subscriptions.push(bindData(target, propertyKey, selector));
+        }
+        Reflect.defineMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, bindingsMeta, target.constructor);
+    };
 }
-exports.addDataMeta = addDataMeta;
+exports.data = data;
 /**
  * Subscribe to the state events and map it to properties
  *
  * @export
  */
-function subscribe() {
+function subscribe(propsClass) {
     var _this = this;
-    var dataBindings = Reflect.getMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, this);
+    var dataBindings = Reflect.getMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, propsClass || this);
     if (dataBindings != undefined && dataBindings.destroyed === true) {
         dataBindings.subscriptions = dataBindings.subscriptions.concat(Object.keys(dataBindings.selectors)
             .map(function (key) { return bindData(_this, key, dataBindings.selectors[key]); }));
