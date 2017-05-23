@@ -1,7 +1,9 @@
 
 # StateX
 
-StateX is a state management library for modern web applications with unidirectional data flow and immutable uni-state (just like redux). StateX has specific APIs for seamless integration with [Angular (2 or above)](https://angular.io) and [React](https://facebook.github.io/react/).  StateX is inspired by [refluxjs](https://github.com/reflux/refluxjs) and [redux](http://redux.js.org/).
+StateX is a state management library for modern web applications with unidirectional data flow and immutable uni-state. StateX is a predictable state container just like REDUX. It helps you implement a unidirectional data flow (Flux architecture) in an easy and elegant way without much boilerplate code. The main objective is to provide an implementation that has minimal touch points, while providing all the benefits of Redux. StateX uses `rxjs` library at its heart, hence promises efficient data flow. StateX is inspired by [refluxjs](https://github.com/reflux/refluxjs) and [redux](http://redux.js.org/).
+
+To enable seamless integration, StateX has specific APIs for [Angular (2 or above)](https://angular.io) and [React](https://facebook.github.io/react/).
 
 **Note: StateX was originally written for angular - [ angular-reflux ]( https://github.com/rintoj/angular-reflux ) and later modified for react - [react-reflux]( https://github.com/rintoj/react-reflux ). Both of these packages are now migrated to StateX**
 
@@ -412,7 +414,7 @@ ReactDOM.render(<AppComponent />, document.getElementById('root'))
 If you set `hotLoad` to true, every change to the state is preserved in localStorage and re-initialized upon refresh. If a state exists in localStorage `INITIAL_STATE` will be ignored. This is very useful for development builds because developers can return to the same screen after every refresh. Remember the screens must written to react to state (reactive UI) in-order to achieve this. `domain` is an optional string to uniquely identify your application.
 
 # Immutable Application State
-To take advantage of React's change detection strategy we need to ensure that the state is indeed immutable. This module uses [seamless-immutable](https://github.com/rtfeldman/seamless-immutable) for immutability.
+To take best use of React's and Angular's change detection strategies we need to ensure that the state is indeed immutable. This module uses [seamless-immutable](https://github.com/rtfeldman/seamless-immutable) for immutability.
 
 Since application state is immutable, the reducer functions will not be able to update state directly; any attempt to update the state will result in error. Therefore a reducer function should either return a portion of the state that needs change (recommended) or a new application state wrapped in `ReplaceableState`, instead.
 
