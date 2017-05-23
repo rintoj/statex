@@ -2,9 +2,11 @@
   "name": "statex",
   "version": "0.0.0",
   "description": "State management library for modern web applications with unidirectional data flow and immutable uni-state (just like redux)",
-  "main": "index.js",
+  "main": "dist/core/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "start": "tsc -w",
+    "test": "mocha dist/**/*.spec.js"
   },
   "keywords": [],
   "author": "Rinto Jose",
@@ -16,5 +18,12 @@
   "bugs": {
     "url": "https://github.com/rintoj/statex/issues"
   },
-  "homepage": "https://github.com/rintoj/statex#readme"
+  "homepage": "https://github.com/rintoj/statex#readme",
+  "dependencies": {
+    "seamless-immutable": "^7.1.2"
+  },
+  "devDependencies": {
+    "rxjs": "^5.4.0",
+    "tslint": "^5.3.2"
+  }
 }
