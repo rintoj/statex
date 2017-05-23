@@ -3,7 +3,7 @@ import { REFLUX_ACTION_KEY, REFLUX_DATA_BINDINGS_KEY } from './constance'
 import { Action } from './action'
 import { Observable } from 'rxjs/Observable'
 import { State } from './state'
-import { StateSelector } from './../dist/state-selector.d'
+import { StateSelector } from './state-selector'
 import { Subscription } from 'rxjs/Subscription'
 
 declare var Reflect: any
@@ -18,6 +18,11 @@ declare var Reflect: any
 export function bindData(target: any, key: string, selector: StateSelector): Subscription {
   return State.select(selector)
     .subscribe(data => {
+      if (typeof target.setState === 'function') {
+        let state = {}
+        state[key] = data
+        target.setState(state)
+      }
       if (typeof target[key] === 'function') return target[key].call(target, data)
       target[key] = data
     })
@@ -41,7 +46,7 @@ export function bindData(target: any, key: string, selector: StateSelector): Sub
  * @param {PropertyDescriptor} descriptor
  * @returns
  */
-export function action(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+export function action(target: any, propertyKey: string, descriptor: PropertyDescriptor): Promise<any> | Observable<any> | any {
 
   let metadata = Reflect.getMetadata('design:paramtypes', target, propertyKey)
   if (metadata.length < 2) throw new Error('@action() must be applied to a function with two arguments. ' +
@@ -70,18 +75,20 @@ export function action(target: any, propertyKey: string, descriptor: PropertyDes
  * @param {any} selector
  * @param {any} bindImmediate
  */
-export function addDataMeta(target: any, propertyKey: string, selector: StateSelector, bindImmediate?: boolean) {
+export function data(selector: StateSelector, bindImmediate?: boolean) {
+  return (target: any, propertyKey: string) => {
 
-  let bindingsMeta = Reflect.getMetadata(REFLUX_DATA_BINDINGS_KEY, target.constructor)
-  if (!Reflect.hasMetadata(REFLUX_DATA_BINDINGS_KEY, target.constructor)) {
-    bindingsMeta = { selectors: {}, subscriptions: [], destroyed: !bindImmediate }
-  }
+    let bindingsMeta = Reflect.getMetadata(REFLUX_DATA_BINDINGS_KEY, target.constructor)
+    if (!Reflect.hasMetadata(REFLUX_DATA_BINDINGS_KEY, target.constructor)) {
+      bindingsMeta = { selectors: {}, subscriptions: [], destroyed: !bindImmediate }
+    }
 
-  bindingsMeta.selectors[propertyKey] = selector
-  if (bindImmediate) {
-    bindingsMeta.subscriptions.push(bindData(target, propertyKey, selector))
+    bindingsMeta.selectors[propertyKey] = selector
+    if (bindImmediate) {
+      bindingsMeta.subscriptions.push(bindData(target, propertyKey, selector))
+    }
+    Reflect.defineMetadata(REFLUX_DATA_BINDINGS_KEY, bindingsMeta, target.constructor)
   }
-  Reflect.defineMetadata(REFLUX_DATA_BINDINGS_KEY, bindingsMeta, target.constructor)
 }
 
 /**
@@ -89,8 +96,8 @@ export function addDataMeta(target: any, propertyKey: string, selector: StateSel
  *
  * @export
  */
-export function subscribe() {
-  let dataBindings = Reflect.getMetadata(REFLUX_DATA_BINDINGS_KEY, this)
+export function subscribe(propsClass) {
+  let dataBindings = Reflect.getMetadata(REFLUX_DATA_BINDINGS_KEY, propsClass || this)
   if (dataBindings != undefined && dataBindings.destroyed === true) {
     dataBindings.subscriptions = dataBindings.subscriptions.concat(
       Object.keys(dataBindings.selectors)

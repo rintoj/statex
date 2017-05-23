@@ -1,7 +1,6 @@
 import * as Immutable from 'seamless-immutable'
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
-import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs/Observable'
 import { StateSelector } from './state-selector'
 import { Subscription } from 'rxjs/Subscription'
@@ -30,7 +29,6 @@ import { Subscription } from 'rxjs/Subscription'
  * @class StateStream
  * @extends {BehaviorSubject}
  */
-@Injectable()
 export class State {
 
   private static state: State = new State()
@@ -90,6 +88,7 @@ export class State {
   constructor() {
     this.currentState = Immutable.from<any>({})
     this.subject = new BehaviorSubject(this.currentState)
+    this.subject.subscribe(state => this.currentState = state)
   }
 
 }
