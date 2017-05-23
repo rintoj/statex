@@ -1,6 +1,7 @@
 import { REFLUX_ACTION_KEY, REFLUX_DATA_BINDINGS_KEY } from './constance'
 
 import { Action } from './action'
+import { DataObserver } from '../@angular'
 import { Observable } from 'rxjs/Observable'
 import { State } from './state'
 import { StateSelector } from './state-selector'
@@ -78,8 +79,10 @@ export function action(target: any, propertyKey: string, descriptor: PropertyDes
 export function data(selector: StateSelector, bindImmediate?: boolean) {
   return (target: any, propertyKey: string) => {
 
-    let bindingsMeta = Reflect.getMetadata(REFLUX_DATA_BINDINGS_KEY, target.constructor)
-    if (!Reflect.hasMetadata(REFLUX_DATA_BINDINGS_KEY, target.constructor)) {
+    let metaTarget = target instanceof DataObserver ? target : target.constructor
+
+    let bindingsMeta = Reflect.getMetadata(REFLUX_DATA_BINDINGS_KEY, metaTarget)
+    if (!Reflect.hasMetadata(REFLUX_DATA_BINDINGS_KEY, metaTarget)) {
       bindingsMeta = { selectors: {}, subscriptions: [], destroyed: !bindImmediate }
     }
 
@@ -87,7 +90,7 @@ export function data(selector: StateSelector, bindImmediate?: boolean) {
     if (bindImmediate) {
       bindingsMeta.subscriptions.push(bindData(target, propertyKey, selector))
     }
-    Reflect.defineMetadata(REFLUX_DATA_BINDINGS_KEY, bindingsMeta, target.constructor)
+    Reflect.defineMetadata(REFLUX_DATA_BINDINGS_KEY, bindingsMeta, metaTarget)
   }
 }
 

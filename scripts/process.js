@@ -20,6 +20,6 @@ function processFile(source, target, lib) {
 Promise.resolve()
   .then(() => processFile('./dist/@react/index.js', './react.js', '@react'))
   .then(() => processFile('./dist/@react/index.d.ts', './react.d.ts', '@react'))
-  .then(() => processFile('./dist/@angular/index.js', './angular.js'), '@angular')
-  .then(() => processFile('./dist/@angular/index.d.ts', './angular.d.ts'), '@angular')
+  .then(() => processFile('./dist/@angular/index.js', './angular.js', '@angular'))
+  .then(() => processFile('./dist/@angular/index.d.ts', './angular.d.ts', '@angular'))
   .catch((error) => console.log(error))

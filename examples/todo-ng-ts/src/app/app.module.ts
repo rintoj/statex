@@ -1,11 +1,14 @@
-import { AppComponent } from './app.component';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { AppComponent } from './app.component'
+import { BrowserModule } from '@angular/platform-browser'
+import { FormsModule } from '@angular/forms'
+import { HttpModule } from '@angular/http'
 import { INITIAL_STATE } from '../state'
-import { NgModule } from '@angular/core';
-import { environment } from './../environments/environment';
-import { initialize } from 'statex';
+import { NgModule } from '@angular/core'
+import { SCREENS } from './index'
+import { SERVICES } from './../service'
+import { STORES } from '../store'
+import { environment } from './../environments/environment'
+import { initialize } from 'statex'
 
 initialize(INITIAL_STATE, {
   hotLoad: !environment.production,
@@ -14,14 +17,15 @@ initialize(INITIAL_STATE, {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ...SCREENS
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule
   ],
-  providers: [],
+  providers: [STORES, SERVICES],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

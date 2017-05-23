@@ -1,17 +1,23 @@
-import { ReplaceableState, action, store } from 'statex/angular'
+import { ReplaceableState, Store, action } from 'statex/angular'
 
 import { AddTodoAction } from '../action'
 import { AppState } from '../state'
+import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs/Rx'
 import { Observer } from 'rxjs/Rx'
 import { RemoveCompletedTodosAction } from '../action'
 import { RemoveTodoAction } from '../action'
 import { SetFilterAction } from '../action'
+import { TodoService } from './../service/todo.service'
 import { ToggleAllTodosAction } from '../action'
 import { ToggleTodoAction } from '../action'
 
-@store
-export class TodoStore {
+@Injectable()
+export class TodoStore extends Store {
+
+  constructor(private todoService: TodoService) {
+    super()
+  }
 
   @action
   add(state: AppState, action: AddTodoAction): AppState {

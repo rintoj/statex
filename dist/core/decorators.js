@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var constance_1 = require("./constance");
+var _angular_1 = require("../@angular");
 var state_1 = require("./state");
 /**
  * Bind data for give key and target using a selector function
@@ -70,15 +71,16 @@ exports.action = action;
  */
 function data(selector, bindImmediate) {
     return function (target, propertyKey) {
-        var bindingsMeta = Reflect.getMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, target.constructor);
-        if (!Reflect.hasMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, target.constructor)) {
+        var metaTarget = target instanceof _angular_1.DataObserver ? target : target.constructor;
+        var bindingsMeta = Reflect.getMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, metaTarget);
+        if (!Reflect.hasMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, metaTarget)) {
             bindingsMeta = { selectors: {}, subscriptions: [], destroyed: !bindImmediate };
         }
         bindingsMeta.selectors[propertyKey] = selector;
         if (bindImmediate) {
             bindingsMeta.subscriptions.push(bindData(target, propertyKey, selector));
         }
-        Reflect.defineMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, bindingsMeta, target.constructor);
+        Reflect.defineMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, bindingsMeta, metaTarget);
     };
 }
 exports.data = data;
