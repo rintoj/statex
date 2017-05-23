@@ -3,7 +3,7 @@
 
 StateX is a state management library for modern web applications with unidirectional data flow and immutable uni-state (just like redux). StateX has specific APIs for seamless integration with [Angular (2 or above)](https://angular.io) and [React](https://facebook.github.io/react/).  StateX is inspired by [refluxjs](https://github.com/reflux/refluxjs) and [redux](http://redux.js.org/).
 
-**Note: StateX was originally written for angular - [ angular-reflux ]( https://github.com/rintoj/angular-reflux ) and later modified for react - [react-reflux]( https://github.com/rintoj/react-reflux ). Both of these packages are now migrated to StateX, is discontinued**
+**Note: StateX was originally written for angular - [ angular-reflux ]( https://github.com/rintoj/angular-reflux ) and later modified for react - [react-reflux]( https://github.com/rintoj/react-reflux ). Both of these packages are now migrated to StateX**
 
 - [StateX](#statex)
 - [Architecture](#architecture)
