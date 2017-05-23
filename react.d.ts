@@ -1,2 +1,2 @@
 export * from './dist/core';
-export * from './dist/react-impl';
+export * from './dist/@react/inject';
