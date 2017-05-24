@@ -240,7 +240,7 @@ import { AppState } from '../state';
 import { AddTodoAction } from '../action';
 import { action, store } from 'statex/react';
 
-@store
+@store()
 export class TodoStore {
 
   @action()
