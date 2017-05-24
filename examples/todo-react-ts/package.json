@@ -67,6 +67,6 @@
     "react": "^15.5.3",
     "react-dom": "^15.5.3",
     "reflect-metadata": "^0.1.10",
-    "statex": "../../"
+    "statex": "^1.0.1"
   }
 }

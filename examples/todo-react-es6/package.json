@@ -5,7 +5,7 @@
   "dependencies": {
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
-    "statex": "../../"
+    "statex": "^1.0.1"
   },
   "devDependencies": {
     "autoprefixer": "7.1.0",
