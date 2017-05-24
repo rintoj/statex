@@ -10,28 +10,37 @@ To enable seamless integration, StateX has specific APIs for [Angular (2 or abov
 - [StateX](#statex)
 - [Architecture](#architecture)
 - [Install](#install)
+- [Usage](#usage)
+- [Examples](#examples)
 - [5 Simple Steps](#5-simple-steps)
   * [1. Define State](#1-define-state)
   * [2. Define Action](#2-define-action)
+    + [Using TypeScript](#using-typescript)
+    + [Using ES6](#using-es6)
   * [3. Create Store & Bind Action](#3-create-store--bind-action)
+    + [Angular with Decorator (Recommended)](#angular-with-decorator-recommended)
+    + [Angular without Decorator](#angular-without-decorator)
+    + [React - TypeScript with Decorators (Recommended)](#react---typescript-with-decorators-recommended)
+    + [React - ES6 with Decorators](#react---es6-with-decorators)
+    + [React - ES6 without Decorators](#react---es6-without-decorators)
   * [4. Dispatch Action](#4-dispatch-action)
   * [5. Consume Data](#5-consume-data)
-- [Integrating with Angular](#integrating-with-angular)
-  * [Create Store - Angular](#create-store---angular)
-  * [Add Stores to Providers List](#add-stores-to-providers-list)
-  * [Consume Data - Angular](#consume-data---angular)
-- [Integrating with React](#integrating-with-react)
-  * [Create Store - React](#create-store---react)
-  * [Import Stores to Application](#import-stores-to-application)
-  * [Consume Data - React](#consume-data---react)
+    + [Angular with Decorator (Recommended)](#angular-with-decorator-recommended-1)
+    + [Angular without Decorator](#angular-without-decorator-1)
+    + [React - TypeScript & Decorators (Recommended)](#react---typescript--decorators-recommended)
+    + [React - ES6 & Decorators](#react---es6--decorators)
+    + [React - ES6 and without Decorator](#react---es6-and-without-decorator)
+- [Organizing Stores](#organizing-stores)
+  * [Angular](#angular)
+  * [React - TypeScript / ES6](#react---typescript--es6)
 - [Reducer Functions & Async Tasks](#reducer-functions--async-tasks)
 - [Initialize State & Enable HotLoad](#initialize-state--enable-hotload)
-  * [Angular](#angular)
+  * [Angular](#angular-1)
   * [React](#react)
 - [Immutable Application State](#immutable-application-state)
-- [Migrating from angular-reflux](#migrating-from-angular-reflux)
-- [Migrating from react-reflux](#migrating-from-react-reflux)
-- [Examples](#examples)
+- [Migrating](#migrating)
+  * [Migrating from angular-reflux](#migrating-from-angular-reflux)
+  * [Migrating from react-reflux](#migrating-from-react-reflux)
 - [About](#about)
   * [Contributing](#contributing)
   * [Author](#author)
@@ -57,12 +66,40 @@ Flux is an architecture for unidirectional data flow. By forcing the data to flo
 npm install statex --save
 ```
 
-# 5 Simple Steps
+# Usage
 
 StateX works with any modern JavaScript framework, however there are minor differences to how it is implemented for each framework.
 
+This guide includes instructions to integrate StateX with the following combinations of frameworks and features
+
+| Framework | Language         | Decorator |               |
+|-----------|------------------|-----------|---------------|
+| Angular   | TypeScript       | YES       | (Recommended) |
+| Angular   | TypeScript       | NO        |               |
+| React     | TypeScript       | YES       | (Recommended) |
+| React     | ES6              | YES       |               |
+| React     | ES6              | NO        |               |
+
+> Use [@angular/cli](http://npmjs.com/package/@angular/cli) to get started with Angular
+
+> Use [react-ts](https://github.com/rintoj/react-ts) to get started with React & TypeScript
+
+> Use [create-react-app](https://www.npmjs.com/package/create-react-app) to get started with React & ES6
+
+or use one of the following examples
+
+# Examples
+
+* [Angular with TypeScript & Decorators - AOT Compatible](https://github.com/rintoj/statex/tree/master/examples/todo-ng-ts)
+* [Angular with TypeScript & without Decorators - AOT Compatible](https://github.com/rintoj/statex/tree/master/examples/todo-ng-wo-decorators)
+* [React with TypeScript & Decorators](https://github.com/rintoj/statex/tree/master/examples/todo-react-ts)
+* [React with ES6 & Decorators](https://github.com/rintoj/statex/tree/master/examples/todo-react-es6)
+* [React with ES6 & without Decorators](https://github.com/rintoj/statex/tree/master/examples/todo-react-es6-wo-decorators)
+
+# 5 Simple Steps
+
 ## 1. Define State
-To get the best out of TypeScript, declare an interface that defines the structure of the application-state.
+To get the best out of TypeScript, declare an interface that defines the structure of the application-state. This is optional if you don't want to use TypeScript.
 
 ```ts
 export interface Todo {
@@ -83,11 +120,28 @@ export interface AppState {
 
 Define actions as classes with the necessary arguments passed on to the constructor. This way we will benefit from the type checking; never again we will miss-spell an action, miss a required parameter or pass a wrong parameter. Remember to extend the action from `Action` class. This makes your action listenable and dispatch-able.
 
+### Using TypeScript
+
 ```ts
 import { Action } from 'statex';
 
 export class AddTodoAction extends Action {
-  constructor(public todo: Todo) { super() }
+  constructor(public todo: Todo) {
+    super()
+  }
+}
+```
+
+### Using ES6
+
+```ts
+import { Action } from 'statex';
+
+export class AddTodoAction extends Action {
+  constructor(todo) {
+    super()
+    this.todo = todo
+  }
 }
 ```
 
@@ -95,31 +149,7 @@ export class AddTodoAction extends Action {
 
 Stores are the central part of a Flux architecture. While most of the logics for a store are same, some of the minor details vary from framework to framework.
 
-* [Create Store - Angular](#create-store---angular)
-* [Create Store - React](#create-store---react)
-
-## 4. Dispatch Action
-
-No singleton dispatcher! Instead StateX lets every action act as dispatcher by itself. One less dependency to define, inject and maintain.
-
-```ts
-new AddTodoAction({ id: 'sd2wde', title: 'Sample task' }).dispatch();
-```
-
-## 5. Consume Data
-
-Use `@data` decorator and a selector function (parameter to the decorator) to get updates from application state. The property gets updated only when the value returned by the selector function changes from previous state to the current state. Additionally, just like a map function, you could map the data to another value as you choose.
-
-We may, at times need to derive additional properties from the data, sometimes using complex calculations. Therefore `@data` can be used with functions as well.
-
-See framework specific implementation.
-
-* [Consume Data - Angular](#consume-data---angular)
-* [Consume Data - React](#consume-data---react)
-
-# Integrating with Angular
-
-## Create Store - Angular
+### Angular with Decorator (Recommended)
 
 Use `@action` decorator to bind a reducer function with an Action. The second parameter to the reducer function (`addTodo`) is an action (of type `AddTodoAction`); `@action` uses this information to bind the correct action. Also remember to extend this class from `Store`.
 
@@ -137,9 +167,255 @@ export class TodoStore extends Store {
 }
 ```
 
-Did you notice `@Injectable()`? Well, stores are injectable modules and uses Angular's dependency injection to instantiate. So take care of adding store to `providers` and to inject into `app.component`.
+### Angular without Decorator
 
-## Add Stores to Providers List
+```ts
+import { Injectable } from '@angular/core'
+import { action, Store } from 'statex/angular'
+
+@Injectable()
+export class TodoStore extends Store {
+
+  constructor() {
+    new AddTodoAction(undefined).subscribe(this.addTodo, this)
+  }
+
+  addTodo(state: AppState, action: AddTodoAction): AppState {
+    return { todos: state.todos.concat([action.todo]) }
+  }
+}
+```
+
+This store will be instantiated by Angular's dependency injection.
+
+### React - TypeScript with Decorators (Recommended)
+
+Use `@action` decorator to bind a reducer function with an Action. The second parameter to the reducer function (`addTodo`) is an action (of type `AddTodoAction`); `@action` uses this information to bind the correct action.
+
+```ts
+import { AppState } from '../state';
+import { AddTodoAction } from '../action';
+import { action, store } from 'statex/react';
+
+@store()
+export class TodoStore {
+
+  @action()
+  addTodo(state: AppState, action: AddTodoAction): AppState {
+    return { todos: state.todos.concat([action.todo]) }
+  }
+}
+```
+
+Stores must bind each action with the reducer function at the startup and also must have a singleton instance. Both of these are taken care by `@store` decorator.
+
+### React - ES6 with Decorators
+
+```ts
+import { AddTodoAction } from '../action';
+import { action, store } from 'statex/react';
+
+@store()
+export class TodoStore {
+
+  @action(AddTodoAction)
+  addTodo(state, action) {
+    return { todos: state.todos.concat([action.todo]) }
+  }
+}
+```
+
+`@action` takes an optional parameter - the action class. Always remember to add `@store()` to the class.
+
+### React - ES6 without Decorators
+
+```ts
+import { AddTodoAction } from '../action';
+import { action, store } from 'statex/react';
+
+export class TodoStore {
+
+  constructor() {
+    new AddTodoAction().subscribe(this.addTodo, this)
+  }
+
+  addTodo(state, action) {
+    return { todos: state.todos.concat([action.todo]) }
+  }
+}
+
+new TodoStore()
+```
+
+Remember to instantiate the store at the end.
+
+## 4. Dispatch Action
+
+No singleton dispatcher! Instead StateX lets every action act as dispatcher by itself. One less dependency to define, inject and maintain.
+
+```ts
+new AddTodoAction({ id: 'sd2wde', title: 'Sample task' }).dispatch();
+```
+
+## 5. Consume Data
+
+Use `@data` decorator and a selector function (parameter to the decorator) to get updates from application state. The property gets updated only when the value returned by the selector function changes from previous state to the current state. Additionally, just like a map function, you could map the data to another value as you choose.
+
+We may, at times need to derive additional properties from the data, sometimes using complex calculations. Therefore `@data` can be used with functions as well.
+
+See framework specific implementation.
+
+### Angular with Decorator (Recommended)
+
+While creating an Angular component, remember to extend it from `DataObserver`. It is essential to instruct Angular Compiler to keep `ngOnInit` and `ngOnDestroy` life cycle events, which can only be achieved by implementing `OnInit` and `OnDestroy` interfaces. `DataObserver` is  responsible for subscribing to state stream when the component is created and for unsubscribing when the component is destroyed. The selector function must also be kept as external functions accessible to outside modules, therefore add `export` to every selector function.
+
+```ts
+import { data, DataObserver } from 'statex/angular';
+
+export const selectState = (state: AppState) => state
+export const selectTodos = (state: AppState) => state.todos
+export const computeHasTodos = (state: AppState) => state.todos && state.todos.length > 0
+
+@Component({
+    ....
+})
+export class TodoListComponent extends DataObserver {
+
+  @data(selectTodos)     // mapping a direct value from state
+  todos: Todo[];
+
+  @data(computeHasTodos) // mapping a different value from state
+  hasTodos: boolean;
+
+  @data(selectState)     // works with functions to allow complex calculations
+  todosDidChange(state: AppState) {
+    // you logic here
+  }
+
+}
+```
+
+### Angular without Decorator
+
+StateX can also be used without decorators as shown below.
+
+```ts
+import { State } from 'statex';
+
+export const selectTodos = (state: AppState) => state.todos
+export const computeHasTodos = (state: AppState) => state.todos && state.todos.length > 0
+
+@Component({
+  <div *ngIf="hasTodos | async">
+    <todo-item *ngFor="let todo in todos | async"></todo-item>
+  </div>
+})
+export class TodoListComponent {
+
+  protected todos = State.select(selectTodos)
+  protected hasTodos = State.select(computeHasTodos)
+
+}
+```
+
+### React - TypeScript & Decorators (Recommended)
+
+Create `Props` class, add properties decorated with `@data`, and finally inject the `Props` to the container using `@inject` decorator.
+
+```tsx
+import * as React from 'react'
+import { data, inject } from 'statex/react'
+
+class Props {
+  @data((state: AppState) => state.todos)
+  todos: Todo[]
+
+  @data((state: AppState) => state.todos && state.todos.length > 0)
+  hasTodos: boolean
+}
+
+interface State { }
+
+@inject(Props)
+export class TodoListComponent extends React.Component<Props, State> {
+
+  render() {
+    const todos = this.props.todos.map(
+      todo => <li key={todo.id}>{todo.text}</li>
+    )
+    return <div> { this.props.hasTodos && <ul> {todos} </ul> } </div>
+  }
+}
+```
+
+### React - ES6 & Decorators
+
+Create `Props` class, add properties decorated with `@data`, and finally inject the `Props` to the container using `@inject` decorator.
+
+```tsx
+import * as React from 'react'
+import { inject } from 'statex/react'
+
+@inject({
+  todos: state => state.todos,
+  hasTodos: state => state.todos && state.todos.length > 0
+})
+export class TodoListComponent extends React.Component {
+
+  render() {
+    const todos = this.props.todos.map(
+      todo => <li key={todo.id}>{todo.text}</li>
+    )
+    return <div> { this.props.hasTodos && <ul> {todos} </ul> } </div>
+  }
+}
+```
+
+### React - ES6 and without Decorator
+
+```ts
+import React from 'react'
+import { State } from 'statex';
+
+export class TodoListComponent extends React.Component {
+
+  subscriptions = [];
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      todos: [],
+      hasTodos: false
+    }
+  }
+
+  componentDidMount() {
+    this.subscriptions.push(
+      State.select(selectTodos).subscribe(todos => this.setState({ todos }))
+    )
+    this.subscriptions.push(
+      State.select(computeHasTodos).subscribe(hasTodos => this.setState({ hasTodos }))
+    )
+  }
+
+  componentWillUnmount() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe())
+    this.subscriptions = []
+  }
+
+  render() {
+    const todos = this.state.todos.map(
+      todo => <li key={todo.id}>{todo.text}</li>
+    )
+    return <div> { this.state.hasTodos && <ul> {todos} </ul> } </div>
+  }
+
+}
+```
+
+# Organizing Stores
+
+## Angular
 
 * Create `STORES` array and a class `Stores` (again injectable) to maintain stores.
 
@@ -185,72 +461,7 @@ export class AppComponent {
 }
 ```
 
-## Consume Data - Angular
-
-While creating container components, remember to extend it from `DataObserver`. It is essential to instruct Angular Compiler to keep `ngOnInit` and `ngOnDestroy` life cycle events, which can only be achieved by implementing `OnInit` and `OnDestroy` interfaces. `DataObserver` is  responsible for subscribing to state stream when the component is created and for unsubscribing when the component is destroyed.
-
-```ts
-import { data, DataObserver } from 'statex/angular';
-
-export const selectState = (state: AppState) => state
-export const selectTodos = (state: AppState) => state.todos
-export const selectFilter = (state: AppState) => state.filter
-
-@Component({
-    ....
-})
-export class TodoListComponent extends DataObserver {
-
-  protected filteredTodos: Todo[]
-
-  // mapping a direct value from state
-  @data(selectTodos)
-  protected todos: Todo[];
-
-  // mapping a different value from state
-  @data(computeHasTodos)
-  protected hasTodos: boolean;
-
-  // works with functions to allow complex calculations
-  @data(selectState)
-  protected todosDidChange(state: AppState) {
-    this.filteredTodos = (state.todos || []).filter(todo => {
-      switch(state.filter) {
-        case 'ALL': return true
-        case 'ACTIVE': return !todo.completed
-        case 'COMPLETED': return todo.completed
-        default: return false
-      }
-    })
-  }
-
-}
-```
-
-# Integrating with React
-
-## Create Store - React
-
-Use `@action` decorator to bind a reducer function with an Action. The second parameter to the reducer function (`addTodo`) is an action (of type `AddTodoAction`); `@action` uses this information to bind the correct action.
-
-```ts
-import { AppState } from '../state';
-import { AddTodoAction } from '../action';
-import { action, store } from 'statex/react';
-
-@store()
-export class TodoStore {
-
-  @action()
-  addTodo(state: AppState, action: AddTodoAction): AppState {
-    return { todos: state.todos.concat([action.todo]) }
-  }
-}
-```
-
-Stores must bind each action with the reducer function at the startup and also must have a singleton instance. Both of these are taken care by `@store` decorator.
-
-## Import Stores to Application
+## React - TypeScript / ES6
 
 Create `index.ts` in `stores` folder and import all stores. You must do this every store you create.
 
@@ -261,61 +472,10 @@ import './todo-store'
 Import stores into application (`app.tsx`), so that application is aware of the stores. This has to be done once at the beginning of the setup. Next time you create a new store, it must only be added to `store/index.ts`
 
 ```ts
-import './stores'
+import './stores/index'
 ...
 export class AppComponent extends React.Component<{}, {}> {
   ...
-}
-```
-
-## Consume Data - React
-
-Create `Props` class, add properties decorated with `@data`, and finally inject the `Props` to the container using `@inject` decorator.
-
-```tsx
-import * as React from 'react'
-import { data, inject } from 'statex/react'
-
-class Props {
-
-  // mapping a direct value from state
-  @data((state: AppState) => state.todos)
-  todos: Todo[]
-
-  // mapping a different value from state
-  @data((state: AppState) => state.todos && state.todos.length > 0)
-  hasTodos: boolean
-
-  // works with functions to allow complex calculations
-  @data((state: AppState) => state)
-  stateDidChange(state: AppState) {
-    this.filteredTodos = (state.todos || []).filter(todo => {
-      switch(state.filter) {
-        case 'ALL': return true
-        case 'ACTIVE': return !todo.completed
-        case 'COMPLETED': return todo.completed
-        default: return false
-      }
-    })
-  }
-
-  filteredTodos: Todo[]
-}
-
-interface State { }
-
-@inject(Props)
-export class TodoListComponent extends React.Component<Props, State> {
-
-  render() {
-    const todos = this.props.todos.map(
-      todo => <li key={todo.id}>{todo.text}</li>
-    )
-
-    return <div>
-      { this.props.hasTodos && <ul> {todos} </ul> }
-    </div>
-  }
 }
 ```
 
@@ -435,7 +595,9 @@ resetTodos(state: AppState, action: ResetTodosAction): AppState {
 }
 ```
 
-# Migrating from angular-reflux
+# Migrating
+
+## Migrating from angular-reflux
 
 * Replace `angular-reflux` package with `statex`
 
@@ -486,7 +648,7 @@ export class AppComponent extends DataObserver {
 }
 ```
 
-# Migrating from react-reflux
+## Migrating from react-reflux
 
 To migrate to StateX replace the package `react-reflux` with `statex`.
 
@@ -504,15 +666,6 @@ import { data, inject } from 'react-reflux'
 // to
 import { data, inject } from 'statex/react'
 ```
-
-# Examples
-
-* [React with TypeScript & Decorators](https://github.com/rintoj/statex/tree/master/examples/todo-react-ts)
-* [React with ES6 & Decorators](https://github.com/rintoj/statex/tree/master/examples/todo-react-es6)
-* [React with ES6 & without Decorators](https://github.com/rintoj/statex/tree/master/examples/todo-react-es6-wo-decorators)
-* [Angular with TypeScript & Decorators - AOT Compatible](https://github.com/rintoj/statex/tree/master/examples/todo-ng-ts)
-* [Angular with TypeScript & without Decorators - AOT Compatible](https://github.com/rintoj/statex/tree/master/examples/todo-ng-wo-decorators)
-
 # About
 
 ### Hope StateX is helpful to you. Please make sure to checkout my other [projects](https://github.com/rintoj) and [articles](https://medium.com/@rintoj). Enjoy coding!
