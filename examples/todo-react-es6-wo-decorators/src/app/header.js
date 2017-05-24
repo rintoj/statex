@@ -1,16 +1,27 @@
 import { AddTodoAction, ToggleAllTodosAction } from '../action/todo-action'
 
 import React from 'react'
-import { inject } from 'statex/react'
+import { State } from 'statex'
 
-@inject({
-  allChecked: state => (state.todos || []).reduce((checked, todo) => checked && todo.completed, true)
-})
 export default class Header extends React.Component {
+
+  subscriptions = []
 
   constructor(props) {
     super(props)
     this.state = { todoText: '' }
+  }
+
+  componentDidMount() {
+    this.subscriptions.push(
+      State.select(state => (state.todos || []).filter(todo => todo.completed).length === (state.todos || []).length)
+        .subscribe(allChecked => this.setState({ allChecked }))
+    )
+  }
+
+  componentWillUnmount() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe())
+    this.subscriptions = []
   }
 
   handleSubmit(event) {
@@ -29,7 +40,7 @@ export default class Header extends React.Component {
   }
 
   render() {
-    const { allChecked } = this.props
+    const { allChecked } = this.state
     return (
       <header id="header">
         <h1>todos</h1>

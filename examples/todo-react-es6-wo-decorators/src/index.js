@@ -5,11 +5,10 @@ import App from './app/app';
 import INITIAL_STATE from './state/initial-state'
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {initialize} from 'statex'
 import registerServiceWorker from './registerServiceWorker';
 
-const statex = require('statex/react')
-
-statex.initialize(INITIAL_STATE, {
+initialize(INITIAL_STATE, {
   hotLoad: process.env.NODE_ENV === 'development',
   domain: 'todo'
 })

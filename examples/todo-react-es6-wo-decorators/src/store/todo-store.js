@@ -1,17 +1,23 @@
-import { ReplaceableState, action, store } from 'statex/react'
-
 import { AddTodoAction } from '../action/todo-action'
 import { Observable } from 'rxjs/Observable'
 import { RemoveCompletedTodosAction } from '../action/todo-action'
 import { RemoveTodoAction } from '../action/todo-action'
+import { ReplaceableState } from 'statex'
 import { SetFilterAction } from '../action/todo-action'
 import { ToggleAllTodosAction } from '../action/todo-action'
 import { ToggleTodoAction } from '../action/todo-action'
 
-@store()
 export class TodoStore {
 
-  @action(AddTodoAction)
+  constructor() {
+    new AddTodoAction().subscribe(this.add, this)
+    new RemoveTodoAction().subscribe(this.remove, this)
+    new ToggleTodoAction().subscribe(this.toggleTodo, this)
+    new RemoveCompletedTodosAction().subscribe(this.removeCompleted, this)
+    new ToggleAllTodosAction().subscribe(this.toggleAll, this)
+    new SetFilterAction().subscribe(this.setFilter, this)
+  }
+
   add(state, action) {
     return new ReplaceableState({
       todos: (state.todos || []).concat(
@@ -22,7 +28,6 @@ export class TodoStore {
     })
   }
 
-  @action(ToggleTodoAction)
   toggleTodo(state, action) {
     return {
       todos: (state.todos || []).map(todo =>
@@ -33,21 +38,18 @@ export class TodoStore {
     }
   }
 
-  @action(RemoveTodoAction)
   remove(state, action) {
     return {
       todos: (state.todos || []).filter(todo => todo.id !== action.id)
     }
   }
 
-  @action(RemoveCompletedTodosAction)
   removeCompleted(state, action) {
     return {
       todos: (state.todos || []).filter(todo => !todo.completed)
     }
   }
 
-  @action(ToggleAllTodosAction)
   toggleAll(state, action){
     return new Promise((resolve, reject) => {
       resolve({
@@ -58,7 +60,6 @@ export class TodoStore {
     })
   }
 
-  @action(SetFilterAction)
   setFilter(state, action) {
     return Observable.create(observer => {
       observer.next({
@@ -73,3 +74,5 @@ export class TodoStore {
   }
 
 }
+
+new TodoStore()

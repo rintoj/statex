@@ -1,6 +1,4 @@
-import {
-  Action,
-} from 'statex/react'
+import { Action } from 'statex'
 
 export class AddTodoAction extends Action {
   constructor(todo) {
