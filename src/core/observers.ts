@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Observable'
  * @interface ActionObserver
  */
 export interface ActionObserver {
-  (state: any, action: Action): Observable<any>
+  (state: any, action: Action): Promise<any> | Observable<any> | any
 }
 
 /**

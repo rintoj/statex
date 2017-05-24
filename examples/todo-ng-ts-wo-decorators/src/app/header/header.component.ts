@@ -1,5 +1,5 @@
-import { AddTodoAction } from '../../action';
-import { Component } from '@angular/core';
+import { AddTodoAction } from '../../action'
+import { Component } from '@angular/core'
 
 @Component({
   selector: 'todo-header',
@@ -7,25 +7,25 @@ import { Component } from '@angular/core';
     <header id="header">
       <h1>todos</h1>
       <form id="todo-form" (submit)="addTodo()">
-        <input id="new-todo" placeholder="What needs to be done?" [(ngModel)]="todoText" name="todo" autofocus="">
+        <input id="new-todo" placeholder="What needs to be done?" [(ngModel)]="todoText" name="todo" autoFocus autoComplete="off">
       </form>
     </header>
   `
 })
 export class TodoHeaderComponent {
 
-  todoText: string;
+  todoText: string
 
   addTodo() {
     if (this.todoText === undefined || this.todoText.trim() === '') {
-      return;
+      return
     }
 
     new AddTodoAction({
       text: this.todoText,
       completed: false
     }).dispatch()
-      .then(() => this.todoText = '');
+      .then(() => this.todoText = '')
   }
 
 }

@@ -1,9 +1,10 @@
-import { Component, ViewEncapsulation } from '@angular/core'
-import { DataObserver, data } from 'statex/angular'
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core'
 import { Filter, Todo } from '../state'
 
 import { AppState } from '../state'
+import { State } from 'statex'
 import { Stores } from '../store'
+import { Subscription } from 'rxjs/Subscription'
 
 export const selectTodos = (state: AppState) => state.todos
 export const selectFilter = (state: AppState) => state.filter
@@ -20,15 +21,25 @@ export const selectFilter = (state: AppState) => state.filter
   styleUrls: ['./app.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class AppComponent extends DataObserver {
+export class AppComponent implements OnInit, OnDestroy {
 
-  @data(selectTodos)
   todos: Todo[]
-
-  @data(selectFilter)
   filter: Filter
+  subscriptions: Subscription[] = []
 
-  constructor(public stores: Stores) {
-    super()
+  constructor(public stores: Stores) { }
+
+  ngOnInit() {
+    this.subscriptions.push(
+      State.select(selectTodos).subscribe(todos => this.todos = todos)
+    )
+    this.subscriptions.push(
+      State.select(selectFilter).subscribe(filter => this.filter = filter)
+    )
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe())
+    this.subscriptions = []
   }
 }

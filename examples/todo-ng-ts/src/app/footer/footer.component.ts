@@ -39,7 +39,6 @@ export class TodoFooterComponent implements OnChanges {
   completedCount: number
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes)
     if (this.todos === undefined) return
     this.completedCount = this.todos.filter(item => item.completed).length
     this.leftCount = this.todos.length - this.completedCount

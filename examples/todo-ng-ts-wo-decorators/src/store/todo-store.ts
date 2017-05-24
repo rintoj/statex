@@ -1,5 +1,3 @@
-import { ReplaceableState, Store, action } from 'statex/angular'
-
 import { AddTodoAction } from '../action'
 import { AppState } from '../state'
 import { Injectable } from '@angular/core'
@@ -7,19 +5,24 @@ import { Observable } from 'rxjs/Rx'
 import { Observer } from 'rxjs/Rx'
 import { RemoveCompletedTodosAction } from '../action'
 import { RemoveTodoAction } from '../action'
+import { ReplaceableState } from 'statex/angular'
 import { SetFilterAction } from '../action'
 import { TodoService } from './../service/todo.service'
 import { ToggleAllTodosAction } from '../action'
 import { ToggleTodoAction } from '../action'
 
 @Injectable()
-export class TodoStore extends Store {
+export class TodoStore {
 
   constructor(private todoService: TodoService) {
-    super()
+    new AddTodoAction(undefined).subscribe(this.add, this)
+    new RemoveTodoAction(undefined).subscribe(this.remove, this)
+    new RemoveCompletedTodosAction().subscribe(this.removeCompleted, this)
+    new ToggleTodoAction(undefined, undefined).subscribe(this.toggleTodo, this)
+    new ToggleAllTodosAction(undefined).subscribe(this.toggleAll, this)
+    new SetFilterAction(undefined).subscribe(this.setFilter, this)
   }
 
-  @action()
   add(state: AppState, action: AddTodoAction): AppState {
     return new ReplaceableState({
       todos: (state.todos || []).concat(
@@ -28,7 +31,6 @@ export class TodoStore extends Store {
     })
   }
 
-  @action()
   toggleTodo(state: AppState, action: ToggleTodoAction): AppState {
     return {
       todos: (state.todos || []).map(todo =>
@@ -39,21 +41,18 @@ export class TodoStore extends Store {
     }
   }
 
-  @action()
   remove(state: AppState, action: RemoveTodoAction): AppState {
     return {
       todos: (state.todos || []).filter(todo => todo.id !== action.id)
     }
   }
 
-  @action()
   removeCompleted(state: AppState, action: RemoveCompletedTodosAction): AppState {
     return {
       todos: (state.todos || []).filter(todo => !todo.completed)
     }
   }
 
-  @action()
   toggleAll(state: AppState, action: ToggleAllTodosAction): Promise<AppState> {
     return new Promise((resolve, reject) => {
       resolve({
@@ -64,7 +63,6 @@ export class TodoStore extends Store {
     })
   }
 
-  @action()
   setFilter(state: AppState, action: SetFilterAction): Observable<AppState> {
     return Observable.create((observer: Observer<AppState>) => {
       observer.next({ filter: action.filter })

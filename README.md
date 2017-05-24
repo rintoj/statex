@@ -171,10 +171,9 @@ export class TodoStore extends Store {
 
 ```ts
 import { Injectable } from '@angular/core'
-import { action, Store } from 'statex/angular'
 
 @Injectable()
-export class TodoStore extends Store {
+export class TodoStore {
 
   constructor() {
     new AddTodoAction(undefined).subscribe(this.addTodo, this)
@@ -297,24 +296,37 @@ export class TodoListComponent extends DataObserver {
 
 ### Angular without Decorator
 
-StateX can also be used without decorators as shown below.
+StateX can also be used without decorators as shown below, however this is not a recommended way. At most care must be taken to unsubscribe all the events on destroy.
 
 ```ts
-import { State } from 'statex';
+import { State } from 'statex'
+import { Subscription } from 'rxjs/Subscription'
 
 export const selectTodos = (state: AppState) => state.todos
-export const computeHasTodos = (state: AppState) => state.todos && state.todos.length > 0
+export const selectFilter = (state: AppState) => state.filter
 
 @Component({
-  <div *ngIf="hasTodos | async">
-    <todo-item *ngFor="let todo in todos | async"></todo-item>
-  </div>
+  ...
 })
-export class TodoListComponent {
+export class AppComponent implements OnInit, OnDestroy {
 
-  protected todos = State.select(selectTodos)
-  protected hasTodos = State.select(computeHasTodos)
+  todos: Todo[]
+  filter: Filter
+  subscriptions: Subscription[] = []
 
+  ngOnInit() {
+    this.subscriptions.push(
+      State.select(selectTodos).subscribe(todos => this.todos = todos)
+    )
+    this.subscriptions.push(
+      State.select(selectFilter).subscribe(filter => this.filter = filter)
+    )
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe())
+    this.subscriptions = []
+  }
 }
 ```
 
