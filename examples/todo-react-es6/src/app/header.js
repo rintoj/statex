@@ -1,17 +1,11 @@
 import { AddTodoAction, ToggleAllTodosAction } from '../action/todo-action'
 
 import React from 'react'
+import { inject } from 'statex/react'
 
-// import { data, inject } from 'statex/react'
-
-// export class Props {
-//   // @data(state => (state.todos || []).reduce((checked, todo) => checked && todo.completed, true))
-//   allChecked = false
-// }
-
-// @inject({
-//   allChecked: state => (state.todos || []).reduce((checked, todo) => checked && todo.completed, true)
-// })
+@inject({
+  allChecked: state => (state.todos || []).reduce((checked, todo) => checked && todo.completed, true)
+})
 export default class Header extends React.Component {
 
   constructor(props) {

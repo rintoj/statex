@@ -10,7 +10,7 @@ import { SetFilterAction } from '../action'
 import { ToggleAllTodosAction } from '../action'
 import { ToggleTodoAction } from '../action'
 
-@store
+@store()
 export class TodoStore {
 
   @action()

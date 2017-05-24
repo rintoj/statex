@@ -2,8 +2,6 @@ import React from 'react'
 import TodoItem from './todo-item'
 import { inject } from 'statex/react'
 
-// interface State { }
-
 @inject({
   filteredTodos: state => (state.todos || []).filter(todo => {
     if (state.filter === 'COMPLETED') return todo.completed

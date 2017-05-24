@@ -1,14 +1,14 @@
 import { ReplaceableState, action, store } from 'statex/react'
 
 import { AddTodoAction } from '../action/todo-action'
-import Observable from 'rxjs/Observable'
+import { Observable } from 'rxjs/Observable'
 import { RemoveCompletedTodosAction } from '../action/todo-action'
 import { RemoveTodoAction } from '../action/todo-action'
 import { SetFilterAction } from '../action/todo-action'
 import { ToggleAllTodosAction } from '../action/todo-action'
 import { ToggleTodoAction } from '../action/todo-action'
 
-@store
+@store()
 export class TodoStore {
 
   @action(AddTodoAction)

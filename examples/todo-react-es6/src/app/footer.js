@@ -1,23 +1,12 @@
 import Filter from './filter'
 import React from 'react'
 import { RemoveCompletedTodosAction } from '../action/todo-action'
+import { inject } from 'statex/react'
 
-// import { data, inject } from 'statex/react'
-
-// class Props {
-
-//   @data((state: AppState) =>
-//     (state.todos || []).reduce((count, item) => count + (item.completed ? 1 : 0), 0)
-//   )
-//   completedCount?: number
-
-//   @data((state: AppState) =>
-//     (state.todos || []).reduce((count, item) => count + (item.completed ? 0 : 1), 0)
-//   )
-//   pendingCount?: number
-// }
-
-// @inject(Props)
+@inject({
+  completedCount: state => (state.todos || []).filter(todo => todo.completed).length,
+  pendingCount: state => (state.todos || []).filter(todo => !todo.completed).length
+})
 export default class Footer extends React.Component {
 
   clearCompleted() {

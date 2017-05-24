@@ -1,20 +1,10 @@
 import React from 'react'
 import { SetFilterAction } from '../action/todo-action'
+import { inject } from 'statex/react'
 
-// import {
-// data,
-// inject,
-// } from 'statex/react'
-
-// class Props {
-
-//   @data((state: AppState) => state.filter)
-//   filter?: Filter
-// }
-
-// interface State { }
-
-// @inject(Props)
+@inject({
+  filter: state => state.filter
+})
 export default class Filter extends React.Component {
 
   setAllFilter() {
