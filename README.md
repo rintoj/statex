@@ -97,7 +97,6 @@ Stores are the central part of a Flux architecture. While most of the logics for
 
 * [Create Store - Angular](#create-store---angular)
 * [Create Store - React](#create-store---react)
-* [Create Store - Generic](#create-store---generic)
 
 ## 4. Dispatch Action
 
@@ -117,7 +116,6 @@ See framework specific implementation.
 
 * [Consume Data - Angular](#consume-data---angular)
 * [Consume Data - React](#consume-data---react)
-* [Consume Data - Generic](#consume-data---generic)
 
 # Integrating with Angular
 
@@ -509,8 +507,11 @@ import { data, inject } from 'statex/react'
 
 # Examples
 
-* [React Application with WebPack & TypeScript](https://github.com/rintoj/statex/tree/master/examples/todo-react-ts)
-* [Angular Application with @angular/cli & AOT](https://github.com/rintoj/statex/tree/master/examples/todo-ng-ts)
+* [React with TypeScript & Decorators](https://github.com/rintoj/statex/tree/master/examples/todo-react-ts)
+* [React with ES6 & Decorators](https://github.com/rintoj/statex/tree/master/examples/todo-react-es6)
+* [React with ES6 & without Decorators](https://github.com/rintoj/statex/tree/master/examples/todo-react-es6-wo-decorators)
+* [Angular with TypeScript & Decorators - AOT Compatible](https://github.com/rintoj/statex/tree/master/examples/todo-ng-ts)
+* [Angular with TypeScript & without Decorators - AOT Compatible](https://github.com/rintoj/statex/tree/master/examples/todo-ng-wo-decorators)
 
 # About
 
