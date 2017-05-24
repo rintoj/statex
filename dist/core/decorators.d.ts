@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { Action } from './action';
 import { StateSelector } from './state-selector';
 import { Subscription } from 'rxjs/Subscription';
 /**
@@ -27,7 +27,7 @@ export declare function bindData(target: any, key: string, selector: StateSelect
  * @param {PropertyDescriptor} descriptor
  * @returns
  */
-export declare function action(target: any, propertyKey: string, descriptor: PropertyDescriptor): Promise<any> | Observable<any> | any;
+export declare function action(targetAction?: Action): (target: any, propertyKey: string, descriptor: PropertyDescriptor) => any;
 /**
  * Add @data meta
  *

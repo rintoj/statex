@@ -42,21 +42,26 @@ exports.bindData = bindData;
  * @param {PropertyDescriptor} descriptor
  * @returns
  */
-function action(target, propertyKey, descriptor) {
-    var metadata = Reflect.getMetadata('design:paramtypes', target, propertyKey);
-    if (metadata.length < 2)
-        throw new Error('@action() must be applied to a function with two arguments. ' +
-            'eg: reducer(state: State, action: SubclassOfAction): State { }');
-    var refluxActions = {};
-    if (Reflect.hasMetadata(constance_1.REFLUX_ACTION_KEY, target)) {
-        refluxActions = Reflect.getMetadata(constance_1.REFLUX_ACTION_KEY, target);
-    }
-    refluxActions[propertyKey] = metadata[1];
-    Reflect.defineMetadata(constance_1.REFLUX_ACTION_KEY, refluxActions, target);
-    return {
-        value: function (state, action) {
-            return descriptor.value.call(this, state, action);
+function action(targetAction) {
+    return function (target, propertyKey, descriptor) {
+        if (targetAction == undefined) {
+            var metadata = Reflect.getMetadata('design:paramtypes', target, propertyKey);
+            if (metadata.length < 2)
+                throw new Error('@action() must be applied to a function with two arguments. ' +
+                    'eg: reducer(state: State, action: SubclassOfAction): State { }');
+            targetAction = metadata[1];
         }
+        var refluxActions = {};
+        if (Reflect.hasMetadata(constance_1.REFLUX_ACTION_KEY, target)) {
+            refluxActions = Reflect.getMetadata(constance_1.REFLUX_ACTION_KEY, target);
+        }
+        refluxActions[propertyKey] = targetAction;
+        Reflect.defineMetadata(constance_1.REFLUX_ACTION_KEY, refluxActions, target);
+        return {
+            value: function (state, action) {
+                return descriptor.value.call(this, state, action);
+            }
+        };
     };
 }
 exports.action = action;

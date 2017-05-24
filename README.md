@@ -132,7 +132,7 @@ import { action, Store } from 'statex/angular'
 @Injectable()
 export class TodoStore extends Store {
 
-  @action
+  @action()
   addTodo(state: AppState, action: AddTodoAction): AppState {
     return { todos: state.todos.concat([action.todo]) }
   }
@@ -243,7 +243,7 @@ import { action, store } from 'statex/react';
 @store
 export class TodoStore {
 
-  @action
+  @action()
   addTodo(state: AppState, action: AddTodoAction): AppState {
     return { todos: state.todos.concat([action.todo]) }
   }
@@ -328,7 +328,7 @@ Reducer functions can return either of the following
 * A portion of the application state as plain object
 
 ```ts
-@action
+@action()
 add(state: AppState, action: AddTodoAction): AppState {
   return {
     todos: (state.todos || []).concat(action.todo)
@@ -338,7 +338,7 @@ add(state: AppState, action: AddTodoAction): AppState {
 
 * A portion of the application state wrapped in Promise, if it needs to perform an async task.
 ```ts
-@action
+@action()
 add(state: AppState, action: AddTodoAction): Promise<AppStore> {
   return new Promise((resolve, reject) => {
     asyncTask().then(() => {
@@ -356,7 +356,7 @@ add(state: AppState, action: AddTodoAction): Promise<AppStore> {
 import { Observable } from 'rxjs/Observable'
 import { Observer } from 'rxjs/Observer'
 
-@action
+@action()
 add(state: AppState, action: AddTodoAction): Observable<AppState> {
   return Observable.create((observer: Observer<AppState>) => {
     observer.next({ showLoader: true })
@@ -419,7 +419,7 @@ To take best use of React's and Angular's change detection strategies we need to
 Since application state is immutable, the reducer functions will not be able to update state directly; any attempt to update the state will result in error. Therefore a reducer function should either return a portion of the state that needs change (recommended) or a new application state wrapped in `ReplaceableState`, instead.
 
 ```ts
-@action
+@action()
 selectTodo(state: AppState, action: SelectTodoAction): AppState {
   // merge with the existing state
   return {
@@ -427,7 +427,7 @@ selectTodo(state: AppState, action: SelectTodoAction): AppState {
   }
 }
 
-@action
+@action()
 resetTodos(state: AppState, action: ResetTodosAction): AppState {
   // replace the current state completely with the new one
   return new ReplaceableState({
@@ -455,7 +455,7 @@ import { data, DataObserver } from 'angular-reflux'
 import { data, DataObserver } from 'statex/angular'
 ```
 
-* Change `@BindAction()` to `@action`
+* Change `@BindAction()` to `@action()`
 
 ```ts
 // from
@@ -465,7 +465,7 @@ addTodo(state: AppState, action: AddTodoAction): AppState {
 }
 
 // to
-@action
+@action()
 addTodo(state: AppState, action: AddTodoAction): AppState {
   ...
 }

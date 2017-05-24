@@ -13,7 +13,7 @@ import { ToggleTodoAction } from '../action'
 @store
 export class TodoStore {
 
-  @action
+  @action()
   add(state: AppState, action: AddTodoAction): AppState {
     return new ReplaceableState({
       todos: (state.todos || []).concat(
@@ -22,7 +22,7 @@ export class TodoStore {
     })
   }
 
-  @action
+  @action()
   toggleTodo(state: AppState, action: ToggleTodoAction): AppState {
     return {
       todos: (state.todos || []).map(todo =>
@@ -33,21 +33,21 @@ export class TodoStore {
     }
   }
 
-  @action
+  @action()
   remove(state: AppState, action: RemoveTodoAction): AppState {
     return {
       todos: (state.todos || []).filter(todo => todo.id !== action.id)
     }
   }
 
-  @action
+  @action()
   removeCompleted(state: AppState, action: RemoveCompletedTodosAction): AppState {
     return {
       todos: (state.todos || []).filter(todo => !todo.completed)
     }
   }
 
-  @action
+  @action()
   toggleAll(state: AppState, action: ToggleAllTodosAction): Promise<AppState> {
     return new Promise((resolve, reject) => {
       resolve({
@@ -58,7 +58,7 @@ export class TodoStore {
     })
   }
 
-  @action
+  @action()
   setFilter(state: AppState, action: SetFilterAction): Observable<AppState> {
     return Observable.create((observer: Observer<AppState>) => {
       observer.next({ filter: action.filter })

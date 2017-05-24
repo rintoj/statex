@@ -47,22 +47,27 @@ export function bindData(target: any, key: string, selector: StateSelector): Sub
  * @param {PropertyDescriptor} descriptor
  * @returns
  */
-export function action(target: any, propertyKey: string, descriptor: PropertyDescriptor): Promise<any> | Observable<any> | any {
+export function action(targetAction?: Action) {
 
-  let metadata = Reflect.getMetadata('design:paramtypes', target, propertyKey)
-  if (metadata.length < 2) throw new Error('@action() must be applied to a function with two arguments. ' +
-    'eg: reducer(state: State, action: SubclassOfAction): State { }')
+  return (target: any, propertyKey: string, descriptor: PropertyDescriptor): Promise<any> | Observable<any> | any => {
 
-  let refluxActions = {}
-  if (Reflect.hasMetadata(REFLUX_ACTION_KEY, target)) {
-    refluxActions = Reflect.getMetadata(REFLUX_ACTION_KEY, target)
-  }
-  refluxActions[propertyKey] = metadata[1]
-  Reflect.defineMetadata(REFLUX_ACTION_KEY, refluxActions, target)
+    if (targetAction == undefined) {
+      let metadata = Reflect.getMetadata('design:paramtypes', target, propertyKey)
+      if (metadata.length < 2) throw new Error('@action() must be applied to a function with two arguments. ' +
+        'eg: reducer(state: State, action: SubclassOfAction): State { }')
+      targetAction = metadata[1]
+    }
+    let refluxActions = {}
+    if (Reflect.hasMetadata(REFLUX_ACTION_KEY, target)) {
+      refluxActions = Reflect.getMetadata(REFLUX_ACTION_KEY, target)
+    }
+    refluxActions[propertyKey] = targetAction
+    Reflect.defineMetadata(REFLUX_ACTION_KEY, refluxActions, target)
 
-  return {
-    value: function (state: any, action: Action): Observable<any> {
-      return descriptor.value.call(this, state, action)
+    return {
+      value: function (state: any, action: Action): Observable<any> {
+        return descriptor.value.call(this, state, action)
+      }
     }
   }
 }

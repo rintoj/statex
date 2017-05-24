@@ -14,13 +14,13 @@ function store(storeClass) {
     // a utility function to generate instances of a class
     function construct(constructor, args) {
         var dynamicClass = function () {
-            return constructor.apply(this, args);
+            return new (constructor.bind.apply(constructor, [void 0].concat(args)))();
         };
         dynamicClass.prototype = constructor.prototype;
         return new dynamicClass();
     }
     // the new constructor behavior
-    var overriddenConstructor = function overriddenConstructor() {
+    var overriddenConstructor = function Store() {
         var _this = this;
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
