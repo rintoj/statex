@@ -295,6 +295,7 @@ label[for='toggle-all'] {
   text-decoration: none;
   border: 1px solid transparent;
   border-radius: 3px;
+  cursor: pointer;
 }
 
 #filters li a.selected,

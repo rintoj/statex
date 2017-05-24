@@ -5,4 +5,4 @@
  * @param {*} storeClass
  * @returns
  */
-export declare function store(storeClass: any): any;
+export declare function store(): (storeClass: any) => any;

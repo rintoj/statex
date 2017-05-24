@@ -2,7 +2,7 @@ import { RemoveTodoAction, ToggleTodoAction } from '../action/todo-action'
 
 import React from 'react'
 
-export class TodoItem extends React.Component{
+export default class TodoItem extends React.Component {
 
   onChange(event) {
     new ToggleTodoAction(this.props.todo.id, event.target.checked).dispatch()

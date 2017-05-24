@@ -1,21 +1,17 @@
 import React from 'react'
 import TodoItem from './todo-item'
-
-// import { data, inject } from 'statex/react'
-
-// class Props {
-//   @data((state: AppState) => (state.todos || []).filter(todo => {
-//     if (state.filter === 'COMPLETED') return todo.completed
-//     if (state.filter === 'ACTIVE') return !todo.completed
-//     return true
-//   }))
-//   filteredTodos?: Todo[]
-// }
+import { inject } from 'statex/react'
 
 // interface State { }
 
-// @inject(Props)
-export class TodoList extends React.Component {
+@inject({
+  filteredTodos: state => (state.todos || []).filter(todo => {
+    if (state.filter === 'COMPLETED') return todo.completed
+    if (state.filter === 'ACTIVE') return !todo.completed
+    return true
+  })
+})
+export default class TodoList extends React.Component {
   render() {
     const { filteredTodos } = this.props
     return (

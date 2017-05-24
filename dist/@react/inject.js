@@ -20,6 +20,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var core_1 = require("../core");
+var constance_1 = require("./../core/constance");
 /**
  * This decorator helps you to inject application state into a component's state
  * @example
@@ -41,6 +42,19 @@ var core_1 = require("../core");
  * @returns
  */
 function inject(propsClass) {
+    if (typeof propsClass === 'object') {
+        var bindingsMeta_1 = Reflect.getMetadata(constance_1.STATEX_DATA_BINDINGS_KEY, propsClass);
+        if (!Reflect.hasMetadata(constance_1.STATEX_DATA_BINDINGS_KEY, propsClass)) {
+            bindingsMeta_1 = { selectors: {}, subscriptions: [], destroyed: true };
+        }
+        Object.keys(propsClass).forEach(function (propertyKey) {
+            if (typeof propsClass[propertyKey] !== 'function') {
+                throw new Error(propertyKey + " must be a selector function!");
+            }
+            bindingsMeta_1.selectors[propertyKey] = propsClass[propertyKey];
+        });
+        Reflect.defineMetadata(constance_1.STATEX_DATA_BINDINGS_KEY, bindingsMeta_1, propsClass);
+    }
     return function (targetComponent) {
         return (function (_super) {
             __extends(ObserverComponent, _super);

@@ -1,4 +1,4 @@
-import { REFLUX_ACTION_KEY } from '../core/constance'
+import { STATEX_ACTION_KEY } from '../core/constance'
 
 /**
  * Use reflection library
@@ -13,8 +13,8 @@ declare var Reflect: any
  */
 export class Store {
   constructor() {
-    if (!Reflect.hasMetadata(REFLUX_ACTION_KEY, this)) return
-    let refluxActions = Reflect.getMetadata(REFLUX_ACTION_KEY, this)
+    if (!Reflect.hasMetadata(STATEX_ACTION_KEY, this)) return
+    let refluxActions = Reflect.getMetadata(STATEX_ACTION_KEY, this)
     Object.keys(refluxActions).forEach(name => new refluxActions[name]().subscribe(this[name], this))
   }
 }

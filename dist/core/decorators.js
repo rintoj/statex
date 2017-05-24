@@ -52,11 +52,11 @@ function action(targetAction) {
             targetAction = metadata[1];
         }
         var refluxActions = {};
-        if (Reflect.hasMetadata(constance_1.REFLUX_ACTION_KEY, target)) {
-            refluxActions = Reflect.getMetadata(constance_1.REFLUX_ACTION_KEY, target);
+        if (Reflect.hasMetadata(constance_1.STATEX_ACTION_KEY, target)) {
+            refluxActions = Reflect.getMetadata(constance_1.STATEX_ACTION_KEY, target);
         }
         refluxActions[propertyKey] = targetAction;
-        Reflect.defineMetadata(constance_1.REFLUX_ACTION_KEY, refluxActions, target);
+        Reflect.defineMetadata(constance_1.STATEX_ACTION_KEY, refluxActions, target);
         return {
             value: function (state, action) {
                 return descriptor.value.call(this, state, action);
@@ -77,15 +77,15 @@ exports.action = action;
 function data(selector, bindImmediate) {
     return function (target, propertyKey) {
         var metaTarget = target instanceof _angular_1.DataObserver ? target : target.constructor;
-        var bindingsMeta = Reflect.getMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, metaTarget);
-        if (!Reflect.hasMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, metaTarget)) {
+        var bindingsMeta = Reflect.getMetadata(constance_1.STATEX_DATA_BINDINGS_KEY, metaTarget);
+        if (!Reflect.hasMetadata(constance_1.STATEX_DATA_BINDINGS_KEY, metaTarget)) {
             bindingsMeta = { selectors: {}, subscriptions: [], destroyed: !bindImmediate };
         }
         bindingsMeta.selectors[propertyKey] = selector;
         if (bindImmediate) {
             bindingsMeta.subscriptions.push(bindData(target, propertyKey, selector));
         }
-        Reflect.defineMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, bindingsMeta, metaTarget);
+        Reflect.defineMetadata(constance_1.STATEX_DATA_BINDINGS_KEY, bindingsMeta, metaTarget);
     };
 }
 exports.data = data;
@@ -96,12 +96,12 @@ exports.data = data;
  */
 function subscribe(propsClass) {
     var _this = this;
-    var dataBindings = Reflect.getMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, propsClass || this);
+    var dataBindings = Reflect.getMetadata(constance_1.STATEX_DATA_BINDINGS_KEY, propsClass || this);
     if (dataBindings != undefined && dataBindings.destroyed === true) {
         dataBindings.subscriptions = dataBindings.subscriptions.concat(Object.keys(dataBindings.selectors)
             .map(function (key) { return bindData(_this, key, dataBindings.selectors[key]); }));
         dataBindings.destroyed = false;
-        Reflect.defineMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, dataBindings, this);
+        Reflect.defineMetadata(constance_1.STATEX_DATA_BINDINGS_KEY, dataBindings, this);
     }
 }
 exports.subscribe = subscribe;
@@ -111,12 +111,12 @@ exports.subscribe = subscribe;
  * @export
  */
 function unsubscribe() {
-    var dataBindings = Reflect.getMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, this);
+    var dataBindings = Reflect.getMetadata(constance_1.STATEX_DATA_BINDINGS_KEY, this);
     if (dataBindings != undefined) {
         dataBindings.subscriptions.forEach(function (subscription) { return subscription.unsubscribe(); });
         dataBindings.subscriptions = [];
         dataBindings.destroyed = true;
-        Reflect.defineMetadata(constance_1.REFLUX_DATA_BINDINGS_KEY, dataBindings, this);
+        Reflect.defineMetadata(constance_1.STATEX_DATA_BINDINGS_KEY, dataBindings, this);
     }
 }
 exports.unsubscribe = unsubscribe;

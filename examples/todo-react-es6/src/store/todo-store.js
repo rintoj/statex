@@ -16,7 +16,7 @@ export class TodoStore {
     return new ReplaceableState({
       todos: (state.todos || []).concat(
         Object.assign({
-          id1: this.generateId()
+          id: this.generateId()
         }, action.todo)
       )
     })

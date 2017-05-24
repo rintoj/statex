@@ -1,4 +1,4 @@
-import { REFLUX_ACTION_KEY, REFLUX_DATA_BINDINGS_KEY } from './constance'
+import { STATEX_ACTION_KEY, STATEX_DATA_BINDINGS_KEY } from './constance'
 
 import { Action } from './action'
 import { DataObserver } from '../@angular'
@@ -58,11 +58,11 @@ export function action(targetAction?: Action) {
       targetAction = metadata[1]
     }
     let refluxActions = {}
-    if (Reflect.hasMetadata(REFLUX_ACTION_KEY, target)) {
-      refluxActions = Reflect.getMetadata(REFLUX_ACTION_KEY, target)
+    if (Reflect.hasMetadata(STATEX_ACTION_KEY, target)) {
+      refluxActions = Reflect.getMetadata(STATEX_ACTION_KEY, target)
     }
     refluxActions[propertyKey] = targetAction
-    Reflect.defineMetadata(REFLUX_ACTION_KEY, refluxActions, target)
+    Reflect.defineMetadata(STATEX_ACTION_KEY, refluxActions, target)
 
     return {
       value: function (state: any, action: Action): Observable<any> {
@@ -86,8 +86,8 @@ export function data(selector: StateSelector, bindImmediate?: boolean) {
 
     let metaTarget = target instanceof DataObserver ? target : target.constructor
 
-    let bindingsMeta = Reflect.getMetadata(REFLUX_DATA_BINDINGS_KEY, metaTarget)
-    if (!Reflect.hasMetadata(REFLUX_DATA_BINDINGS_KEY, metaTarget)) {
+    let bindingsMeta = Reflect.getMetadata(STATEX_DATA_BINDINGS_KEY, metaTarget)
+    if (!Reflect.hasMetadata(STATEX_DATA_BINDINGS_KEY, metaTarget)) {
       bindingsMeta = { selectors: {}, subscriptions: [], destroyed: !bindImmediate }
     }
 
@@ -95,7 +95,7 @@ export function data(selector: StateSelector, bindImmediate?: boolean) {
     if (bindImmediate) {
       bindingsMeta.subscriptions.push(bindData(target, propertyKey, selector))
     }
-    Reflect.defineMetadata(REFLUX_DATA_BINDINGS_KEY, bindingsMeta, metaTarget)
+    Reflect.defineMetadata(STATEX_DATA_BINDINGS_KEY, bindingsMeta, metaTarget)
   }
 }
 
@@ -105,7 +105,7 @@ export function data(selector: StateSelector, bindImmediate?: boolean) {
  * @export
  */
 export function subscribe(propsClass) {
-  let dataBindings = Reflect.getMetadata(REFLUX_DATA_BINDINGS_KEY, propsClass || this)
+  let dataBindings = Reflect.getMetadata(STATEX_DATA_BINDINGS_KEY, propsClass || this)
   if (dataBindings != undefined && dataBindings.destroyed === true) {
     dataBindings.subscriptions = dataBindings.subscriptions.concat(
       Object.keys(dataBindings.selectors)
@@ -113,7 +113,7 @@ export function subscribe(propsClass) {
     )
 
     dataBindings.destroyed = false
-    Reflect.defineMetadata(REFLUX_DATA_BINDINGS_KEY, dataBindings, this)
+    Reflect.defineMetadata(STATEX_DATA_BINDINGS_KEY, dataBindings, this)
   }
 }
 
@@ -123,11 +123,11 @@ export function subscribe(propsClass) {
  * @export
  */
 export function unsubscribe() {
-  let dataBindings = Reflect.getMetadata(REFLUX_DATA_BINDINGS_KEY, this)
+  let dataBindings = Reflect.getMetadata(STATEX_DATA_BINDINGS_KEY, this)
   if (dataBindings != undefined) {
     dataBindings.subscriptions.forEach(subscription => subscription.unsubscribe())
     dataBindings.subscriptions = []
     dataBindings.destroyed = true
-    Reflect.defineMetadata(REFLUX_DATA_BINDINGS_KEY, dataBindings, this)
+    Reflect.defineMetadata(STATEX_DATA_BINDINGS_KEY, dataBindings, this)
   }
 }
