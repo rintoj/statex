@@ -1,3 +1,8 @@
+# v1.0.1
+
+* let `ActionObserver` now return `Observable<any>`, `Promise<any>` or the state itself as object
+* update `statex` packages in examples to `^1.0.1`
+
 # v1.0.0
 
 * first version with finalized APIs compatible with Angular & React both with and without TypeScript and decorators.

@@ -111,7 +111,7 @@ export class Action {
             observer.complete()
           })
         }
-        return result
+        return result as Observable<any>
       })
 
       // merge or replace state

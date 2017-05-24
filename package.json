@@ -9,6 +9,7 @@
     "start": "tsc -w",
     "process": "node ./scripts/process.js",
     "clean": "node ./scripts/clean.js",
+    "prepublish": "npm run build",
     "test": "mocha dist/**/*.spec.js"
   },
   "keywords": [],
