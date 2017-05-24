@@ -1,3 +1,7 @@
+# v1.0.0
+
+* first version with finalized APIs compatible with Angular & React both with and without TypeScript and decorators.
+
 # v0.0.2
 
 * change API for React with E6 and decorators
