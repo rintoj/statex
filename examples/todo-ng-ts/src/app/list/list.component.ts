@@ -1,6 +1,6 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Filter, Todo } from '../../state';
-import { RemoveTodoAction, ToggleAllTodosAction, ToggleTodoAction } from '../../action';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core'
+import { Filter, Todo } from '../../state'
+import { RemoveTodoAction, ToggleAllTodosAction, ToggleTodoAction } from '../../action'
 
 @Component({
   selector: 'todo-list',
@@ -20,30 +20,30 @@ import { RemoveTodoAction, ToggleAllTodosAction, ToggleTodoAction } from '../../
 export class TodoListComponent implements OnChanges {
 
   @Input()
-  todos: Todo[];
+  todos: Todo[]
 
   @Input()
-  filter: Filter;
+  filter: Filter
 
-  filteredTodos: Todo[];
-  allChecked: boolean;
+  filteredTodos: Todo[]
+  allChecked: boolean
 
   ngOnChanges(changes: SimpleChanges) {
-    this.filteredTodos = this.filterTodos(this.todos, this.filter);
-    this.allChecked = this.filteredTodos.filter(item => item.completed).length === this.filteredTodos.length;
+    this.filteredTodos = this.filterTodos(this.todos, this.filter)
+    this.allChecked = this.filteredTodos.filter(item => item.completed).length === this.filteredTodos.length
   }
 
   markAll(complete: boolean) {
-    new ToggleAllTodosAction(complete).dispatch();
+    new ToggleAllTodosAction(complete).dispatch()
   }
 
   toggleTodo(todo: Todo) {
-    new ToggleTodoAction(todo.id, !todo.completed).dispatch();
+    new ToggleTodoAction(todo.id, !todo.completed).dispatch()
   }
 
   removeTodo(event, todo: Todo) {
-    event.stopPropagation();
-    new RemoveTodoAction(todo.id).dispatch();
+    event.stopPropagation()
+    new RemoveTodoAction(todo.id).dispatch()
   }
 
   private filterTodos(todos: Todo[], filter: Filter) {
@@ -54,6 +54,6 @@ export class TodoListComponent implements OnChanges {
         case 'ACTIVE': return !item.completed
         default: return true
       }
-    });
+    })
   }
 }
