@@ -14,11 +14,23 @@ var core_1 = require("../core");
  */
 var DataObserver = (function () {
     function DataObserver() {
+        var _this = this;
+        var originalInit = this.ngOnInit;
+        this.ngOnInit = function () {
+            core_1.subscribe.bind(_this)();
+            originalInit.bind(_this)();
+        };
+        var originalDestroy = this.ngOnDestroy;
+        this.ngOnDestroy = function () {
+            core_1.unsubscribe.bind(_this)();
+            originalDestroy.bind(_this)();
+        };
     }
     DataObserver.prototype.ngOnInit = function () {
-        core_1.subscribe.bind(this)();
+        // empty on purpose
     };
     DataObserver.prototype.ngOnDestroy = function () {
+        // empty on purpose
         core_1.unsubscribe.bind(this)();
     };
     return DataObserver;

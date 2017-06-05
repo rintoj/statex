@@ -11,6 +11,7 @@ import { OnDestroy, OnInit } from '@angular/core';
  * @implements {OnDestroy}
  */
 export declare class DataObserver implements OnInit, OnDestroy {
+    constructor();
     ngOnInit(): void;
     ngOnDestroy(): void;
 }

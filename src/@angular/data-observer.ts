@@ -14,11 +14,25 @@ import { subscribe, unsubscribe } from '../core'
  */
 export class DataObserver implements OnInit, OnDestroy {
 
+  constructor() {
+    const originalInit = this.ngOnInit
+    this.ngOnInit = () => {
+      subscribe.bind(this)()
+      originalInit.bind(this)()
+    }
+    const originalDestroy = this.ngOnDestroy
+    this.ngOnDestroy = () => {
+      unsubscribe.bind(this)()
+      originalDestroy.bind(this)()
+    }
+  }
+
   ngOnInit() {
-    subscribe.bind(this)()
+    // empty on purpose
   }
 
   ngOnDestroy() {
+    // empty on purpose
     unsubscribe.bind(this)()
   }
 }

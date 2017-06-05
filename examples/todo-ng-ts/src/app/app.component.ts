@@ -31,4 +31,9 @@ export class AppComponent extends DataObserver {
   constructor(public stores: Stores) {
     super()
   }
+
+  ngOnInit() {
+    // overridden ngOnInit - empty on purpose
+    // this proves that DataObserver.ngOnInit is called even if ngOnInit is overridden
+  }
 }

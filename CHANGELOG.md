@@ -1,3 +1,7 @@
+# v1.0.2
+
+* Bug fix: DataObserver.ngOnInit() was not being called if it was overridden by child class
+
 # v1.0.1
 
 * let `ActionObserver` now return `Observable<any>`, `Promise<any>` or the state itself as object
