@@ -126,7 +126,6 @@ var Action = (function () {
             }
             return state;
         })
-            .catch(function (error) { return Observable_1.Observable.empty(); })
             .share();
         return new Promise(function (resolve, reject) {
             // to trigger observable

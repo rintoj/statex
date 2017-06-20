@@ -136,9 +136,6 @@ export class Action {
         return state
       })
 
-      // catch any error occurred
-      .catch((error: any): any => Observable.empty())
-
       // make this sharable (to avoid multiple copies of this observable being created)
       .share()
 

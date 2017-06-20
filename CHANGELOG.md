@@ -1,3 +1,7 @@
+# v1.0.3
+
+* Bug fix: Fix error handling for Action. Now dispatch() rejects with error
+
 # v1.0.2
 
 * Bug fix: DataObserver.ngOnInit() was not being called if it was overridden by child class
