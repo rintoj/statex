@@ -1,4 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.STATEX_ACTION_KEY = Symbol('statex:actions');
-exports.STATEX_DATA_BINDINGS_KEY = Symbol('statex:dataBindings');
+var symbol = require('es6-symbol');
+exports.STATEX_ACTION_KEY = symbol('statex:actions');
+exports.STATEX_DATA_BINDINGS_KEY = symbol('statex:dataBindings');

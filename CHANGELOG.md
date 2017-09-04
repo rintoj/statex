@@ -1,3 +1,7 @@
+# v1.0.4
+
+* Bug fix: Add polyfill for Symbol. Fixes statex with react native in android.
+
 # v1.0.3
 
 * Bug fix: Fix error handling for Action. Now dispatch() rejects with error
