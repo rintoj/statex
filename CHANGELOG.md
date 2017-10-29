@@ -1,3 +1,7 @@
+# v1.0.5
+
+* bug fix: lastAction ends up on never ending recursive function call.
+
 # v1.0.4
 
 * Bug fix: Add polyfill for Symbol. Fixes statex with react native in android.
