@@ -56,7 +56,7 @@ function inject(propsClass) {
         Reflect.defineMetadata(constance_1.STATEX_DATA_BINDINGS_KEY, bindingsMeta_1, propsClass);
     }
     return function (targetComponent) {
-        return (function (_super) {
+        return /** @class */ (function (_super) {
             __extends(ObserverComponent, _super);
             function ObserverComponent() {
                 return _super !== null && _super.apply(this, arguments) || this;

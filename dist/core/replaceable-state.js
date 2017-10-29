@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @export
  * @class ReplaceableState
  */
-var ReplaceableState = (function () {
+var ReplaceableState = /** @class */ (function () {
     function ReplaceableState(state) {
         this.state = state;
     }

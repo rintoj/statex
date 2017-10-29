@@ -42,7 +42,7 @@ export declare class Action {
      *
      * @memberOf Action
      */
-    static readonly lastAction: any;
+    static readonly lastAction: Action;
     /**
      * Returns identity of this class
      *
