@@ -53,7 +53,7 @@ export class Action {
    * @memberOf Action
    */
   public static get lastAction() {
-    return Action.lastAction
+    return Action._lastAction
   }
 
   /**
