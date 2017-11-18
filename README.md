@@ -161,8 +161,8 @@ import { action, Store } from 'statex/angular'
 export class TodoStore extends Store {
 
   @action()
-  addTodo(state: AppState, action: AddTodoAction): AppState {
-    return { todos: state.todos.concat([action.todo]) }
+  addTodo(state: AppState, payload: AddTodoAction): AppState {
+    return { todos: state.todos.concat([payload.todo]) }
   }
 }
 ```
@@ -179,8 +179,8 @@ export class TodoStore {
     new AddTodoAction(undefined).subscribe(this.addTodo, this)
   }
 
-  addTodo(state: AppState, action: AddTodoAction): AppState {
-    return { todos: state.todos.concat([action.todo]) }
+  addTodo(state: AppState, payload: AddTodoAction): AppState {
+    return { todos: state.todos.concat([payload.todo]) }
   }
 }
 ```
@@ -200,8 +200,8 @@ import { action, store } from 'statex/react';
 export class TodoStore {
 
   @action()
-  addTodo(state: AppState, action: AddTodoAction): AppState {
-    return { todos: state.todos.concat([action.todo]) }
+  addTodo(state: AppState, payload: AddTodoAction): AppState {
+    return { todos: state.todos.concat([payload.todo]) }
   }
 }
 ```
@@ -218,8 +218,8 @@ import { action, store } from 'statex/react';
 export class TodoStore {
 
   @action(AddTodoAction)
-  addTodo(state, action) {
-    return { todos: state.todos.concat([action.todo]) }
+  addTodo(state, payload) {
+    return { todos: state.todos.concat([payload.todo]) }
   }
 }
 ```
@@ -230,7 +230,6 @@ export class TodoStore {
 
 ```ts
 import { AddTodoAction } from '../action';
-import { action, store } from 'statex/react';
 
 export class TodoStore {
 
@@ -238,8 +237,8 @@ export class TodoStore {
     new AddTodoAction().subscribe(this.addTodo, this)
   }
 
-  addTodo(state, action) {
-    return { todos: state.todos.concat([action.todo]) }
+  addTodo(state, payload) {
+    return { todos: state.todos.concat([payload.todo]) }
   }
 }
 
@@ -385,7 +384,7 @@ export class TodoListComponent extends React.Component {
 
 ### React - ES6 and without Decorator
 
-```ts
+```tsx
 import React from 'react'
 import { State } from 'statex';
 
@@ -484,7 +483,7 @@ import './todo-store'
 Import stores into application (`app.tsx`), so that application is aware of the stores. This has to be done once at the beginning of the setup. Next time you create a new store, it must only be added to `store/index.ts`
 
 ```ts
-import './stores/index'
+import './stores'
 ...
 export class AppComponent extends React.Component<{}, {}> {
   ...
@@ -499,9 +498,9 @@ Reducer functions can return either of the following
 
 ```ts
 @action()
-add(state: AppState, action: AddTodoAction): AppState {
+add(state: AppState, payload: AddTodoAction): AppState {
   return {
-    todos: (state.todos || []).concat(action.todo)
+    todos: (state.todos || []).concat(payload.todo)
   }
 }
 ```
@@ -509,11 +508,11 @@ add(state: AppState, action: AddTodoAction): AppState {
 * A portion of the application state wrapped in Promise, if it needs to perform an async task.
 ```ts
 @action()
-add(state: AppState, action: AddTodoAction): Promise<AppStore> {
+add(state: AppState, payload: AddTodoAction): Promise<AppStore> {
   return new Promise((resolve, reject) => {
     asyncTask().then(() => {
       resolve({
-        todos: (state.todos || []).concat(action.todo)
+        todos: (state.todos || []).concat(payload.todo)
       })
     })
   })
@@ -527,12 +526,12 @@ import { Observable } from 'rxjs/Observable'
 import { Observer } from 'rxjs/Observer'
 
 @action()
-add(state: AppState, action: AddTodoAction): Observable<AppState> {
+add(state: AppState, payload: AddTodoAction): Observable<AppState> {
   return Observable.create((observer: Observer<AppState>) => {
     observer.next({ showLoader: true })
     asyncTask().then(() => {
       observer.next({
-        todos: (state.todos || []).concat(action.todo),
+        todos: (state.todos || []).concat(payload.todo),
         showLoader: false
       })
       observer.complete()
@@ -574,6 +573,7 @@ import { initialize } from 'statex/react'
 
 initialize(INITIAL_STATE, {
   hotLoad: process.env.NODE_ENV !== 'production',
+  showError: process.env.NODE_ENV !== 'production',
   domain: 'my-app'
 })
 
@@ -581,7 +581,7 @@ import { AppComponent } from './app'
 ReactDOM.render(<AppComponent />, document.getElementById('root'))
 ```
 
-If you set `hotLoad` to true, every change to the state is preserved in localStorage and re-initialized upon refresh. If a state exists in localStorage `INITIAL_STATE` will be ignored. This is very useful for development builds because developers can return to the same screen after every refresh. Remember the screens must written to react to state (reactive UI) in-order to achieve this. `domain` is an optional string to uniquely identify your application.
+If you set `hotLoad` to true, every change to the state is preserved in localStorage and re-initialized upon refresh. If a state exists in localStorage `INITIAL_STATE` will be ignored. This is useful for development builds because developers can return to the same screen after every refresh. Remember that the screens must react to state (reactive UI) in-order to achieve this. `domain` is an optional string to uniquely identify your application. `showError`, if set to true, displays console errors when the actions are rejected.
 
 # Immutable Application State
 To take best use of React's and Angular's change detection strategies we need to ensure that the state is indeed immutable. This module uses [seamless-immutable](https://github.com/rtfeldman/seamless-immutable) for immutability.
@@ -590,15 +590,15 @@ Since application state is immutable, the reducer functions will not be able to 
 
 ```ts
 @action()
-selectTodo(state: AppState, action: SelectTodoAction): AppState {
+selectTodo(state: AppState, payload: SelectTodoAction): AppState {
   // merge with the existing state
   return {
-    selectedTodo: action.todo
+    selectedTodo: payload.todo
   }
 }
 
 @action()
-resetTodos(state: AppState, action: ResetTodosAction): AppState {
+resetTodos(state: AppState, payload: ResetTodosAction): AppState {
   // replace the current state completely with the new one
   return new ReplaceableState({
     todos: [],
