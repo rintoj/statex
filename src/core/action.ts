@@ -41,6 +41,7 @@ import { State } from './state'
 export class Action {
 
   private static _lastAction: Action
+  private static _showError: boolean
   private static identities: any[] = []
   private static subscriptions: any[] = []
 
@@ -54,6 +55,13 @@ export class Action {
    */
   public static get lastAction() {
     return Action._lastAction
+  }
+
+  /**
+   * Set show error flag, if set to true, this module must show errors on Action rejections
+   */
+  public static set showError(showError: boolean) {
+    Action._showError = showError
   }
 
   /**
@@ -143,7 +151,13 @@ export class Action {
       // to trigger observable
       observable.subscribe(() => {
         // empty function
-      }, reject, () => resolve(State.current))
+      }, (error) => {
+        // show error
+        if (Action._showError) {
+          console.error(error)
+        }
+        reject(error)
+      }, () => resolve(State.current))
     })
   }
 }

@@ -1,15 +1,18 @@
 import * as Immutable from 'seamless-immutable'
 
 import { State } from './state'
+import { Action } from './action'
 
 export interface InitOptions {
   hotLoad?: boolean
+  showError?: boolean
   domain?: string
 }
 
 export function initialize(initialState: any, options?: InitOptions) {
 
   options = options || { domain: 'default' }
+  Action.showError = options.showError
 
   const cacheKey = `statex-cache:${options.domain}`
 
