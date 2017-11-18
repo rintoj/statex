@@ -122,6 +122,12 @@ export class Action {
         return result as Observable<any>
       })
 
+      // if reducer returns function call that function to resolve state
+      .map((state: any) => {
+        if (typeof state === 'function') return state()
+        return state
+      })
+
       // merge or replace state
       .map((state: any) => {
         if (state instanceof ReplaceableState) {

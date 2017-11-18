@@ -8,18 +8,24 @@
       "variables-before-functions"
     ],
     "no-any": false,
-    "no-inferrable-types": [false],
+    "no-inferrable-types": [
+      false
+    ],
     "no-internal-module": true,
     "no-var-requires": false,
-    "typedef": [false],
+    "typedef": [
+      false
+    ],
     "typedef-whitespace": [
-      true, {
+      true,
+      {
         "call-signature": "nospace",
         "index-signature": "nospace",
         "parameter": "nospace",
         "property-declaration": "nospace",
         "variable-declaration": "nospace"
-      }, {
+      },
+      {
         "call-signature": "space",
         "index-signature": "space",
         "parameter": "space",
@@ -51,7 +57,8 @@
     "no-shadowed-variable": true,
     "no-string-literal": true,
     "no-switch-case-fall-through": true,
-    "no-unused-expression": true,
+    "no-unused-expression": false,
+    "no-unused-expression-chai": true,
     "no-use-before-declare": true,
     "no-var-keyword": true,
     "radix": true,
@@ -76,7 +83,8 @@
     "no-trailing-whitespace": true,
     "object-literal-sort-keys": false,
     "trailing-comma": [
-      true, {
+      true,
+      {
         "multiline": "never",
         "singleline": "never"
       }
@@ -86,15 +94,21 @@
       false,
       "allow-named-functions"
     ],
-    "align": [true],
+    "align": [
+      true
+    ],
     "class-name": true,
     "comment-format": [
       true,
       "check-space"
     ],
-    "interface-name": [false],
+    "interface-name": [
+      false
+    ],
     "jsdoc-format": true,
-    "no-consecutive-blank-lines": [true],
+    "no-consecutive-blank-lines": [
+      true
+    ],
     "no-parameter-properties": false,
     "one-line": [
       true,
@@ -127,5 +141,8 @@
       "check-separator",
       "check-type"
     ]
-  }
+  },
+  "rulesDirectory": [
+    "tslint-no-unused-expression-chai"
+  ]
 }

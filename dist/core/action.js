@@ -12,7 +12,7 @@ var Observable_1 = require("rxjs/Observable");
 var replaceable_state_1 = require("./replaceable-state");
 var state_1 = require("./state");
 /**
- * Defines an action which an be extended to implement custom actions for a reflux application
+ * Defines an action which an be extended to implement custom actions for a statex application
  *
  * @example
  *
@@ -49,6 +49,16 @@ var Action = /** @class */ (function () {
          */
         get: function () {
             return Action._lastAction;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Action, "showError", {
+        /**
+         * Set show error flag, if set to true, this module must show errors on Action rejections
+         */
+        set: function (showError) {
+            Action._showError = showError;
         },
         enumerable: true,
         configurable: true
@@ -131,7 +141,13 @@ var Action = /** @class */ (function () {
             // to trigger observable
             observable.subscribe(function () {
                 // empty function
-            }, reject, function () { return resolve(state_1.State.current); });
+            }, function (error) {
+                // show error
+                if (Action._showError) {
+                    console.error(error);
+                }
+                reject(error);
+            }, function () { return resolve(state_1.State.current); });
         });
     };
     Action.identities = [];

@@ -4,7 +4,7 @@ var Immutable = require("seamless-immutable");
 var BehaviorSubject_1 = require("rxjs/BehaviorSubject");
 var Observable_1 = require("rxjs/Observable");
 /**
- * Defines a stream for changing state in a reflux application
+ * Defines a stream for changing state in a statex application
  *
  * @example
  *

@@ -15,7 +15,10 @@
       "es6"
     ],
     "types": [
-      "node"
+      "node",
+      "mocha",
+      "chai",
+      "chai-spies"
     ]
   },
   "exclude": [

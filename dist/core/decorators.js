@@ -12,15 +12,15 @@ var state_1 = require("./state");
  */
 function bindData(target, key, selector) {
     return state_1.State.select(selector)
-        .subscribe(function (data) {
+        .subscribe(function (args) {
         if (typeof target.setState === 'function') {
             var state = {};
-            state[key] = data;
+            state[key] = args;
             target.setState(state);
         }
         if (typeof target[key] === 'function')
-            return target[key].call(target, data);
-        target[key] = data;
+            return target[key].call(target, args);
+        target[key] = args;
     });
 }
 exports.bindData = bindData;
@@ -51,15 +51,15 @@ function action(targetAction) {
                     'eg: reducer(state: State, action: SubclassOfAction): State { }');
             targetAction = metadata[1];
         }
-        var refluxActions = {};
+        var statexActions = {};
         if (Reflect.hasMetadata(constance_1.STATEX_ACTION_KEY, target)) {
-            refluxActions = Reflect.getMetadata(constance_1.STATEX_ACTION_KEY, target);
+            statexActions = Reflect.getMetadata(constance_1.STATEX_ACTION_KEY, target);
         }
-        refluxActions[propertyKey] = targetAction;
-        Reflect.defineMetadata(constance_1.STATEX_ACTION_KEY, refluxActions, target);
+        statexActions[propertyKey] = targetAction;
+        Reflect.defineMetadata(constance_1.STATEX_ACTION_KEY, statexActions, target);
         return {
-            value: function (state, action) {
-                return descriptor.value.call(this, state, action);
+            value: function (state, payload) {
+                return descriptor.value.call(this, state, payload);
             }
         };
     };

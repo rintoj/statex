@@ -29,8 +29,8 @@ function store() {
             }
             if (!Reflect.hasMetadata(constance_1.STATEX_ACTION_KEY, this))
                 return;
-            var refluxActions = Reflect.getMetadata(constance_1.STATEX_ACTION_KEY, this);
-            Object.keys(refluxActions).forEach(function (name) { return new refluxActions[name]().subscribe(_this[name], _this); });
+            var statexActions = Reflect.getMetadata(constance_1.STATEX_ACTION_KEY, this);
+            Object.keys(statexActions).forEach(function (name) { return new statexActions[name]().subscribe(_this[name], _this); });
             return construct(original, args);
         };
         // copy prototype so instanceof operator still works
