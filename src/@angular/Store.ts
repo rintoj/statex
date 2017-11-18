@@ -14,7 +14,7 @@ declare var Reflect: any
 export class Store {
   constructor() {
     if (!Reflect.hasMetadata(STATEX_ACTION_KEY, this)) return
-    let refluxActions = Reflect.getMetadata(STATEX_ACTION_KEY, this)
-    Object.keys(refluxActions).forEach(name => new refluxActions[name]().subscribe(this[name], this))
+    let statexActions = Reflect.getMetadata(STATEX_ACTION_KEY, this)
+    Object.keys(statexActions).forEach(name => new statexActions[name]().subscribe(this[name], this))
   }
 }

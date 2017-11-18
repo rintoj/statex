@@ -11,7 +11,7 @@ export function initialize(initialState: any, options?: InitOptions) {
 
   options = options || { domain: 'default' }
 
-  const cacheKey = `reflux-cache:${options.domain}`
+  const cacheKey = `statex-cache:${options.domain}`
 
   if (options.hotLoad) {
     // for dev builds

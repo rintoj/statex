@@ -6,7 +6,7 @@ import { StateSelector } from './state-selector'
 import { Subscription } from 'rxjs/Subscription'
 
 /**
- * Defines a stream for changing state in a reflux application
+ * Defines a stream for changing state in a statex application
  *
  * @example
  *

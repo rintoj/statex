@@ -15,7 +15,7 @@ import { ReplaceableState } from './replaceable-state'
 import { State } from './state'
 
 /**
- * Defines an action which an be extended to implement custom actions for a reflux application
+ * Defines an action which an be extended to implement custom actions for a statex application
  *
  * @example
  *

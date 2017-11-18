@@ -18,14 +18,14 @@ declare var Reflect: any
  */
 export function bindData(target: any, key: string, selector: StateSelector): Subscription {
   return State.select(selector)
-    .subscribe(data => {
+    .subscribe(args => {
       if (typeof target.setState === 'function') {
         let state = {}
-        state[key] = data
+        state[key] = args
         target.setState(state)
       }
-      if (typeof target[key] === 'function') return target[key].call(target, data)
-      target[key] = data
+      if (typeof target[key] === 'function') return target[key].call(target, args)
+      target[key] = args
     })
 }
 
@@ -57,16 +57,16 @@ export function action(targetAction?: Action) {
         'eg: reducer(state: State, action: SubclassOfAction): State { }')
       targetAction = metadata[1]
     }
-    let refluxActions = {}
+    let statexActions = {}
     if (Reflect.hasMetadata(STATEX_ACTION_KEY, target)) {
-      refluxActions = Reflect.getMetadata(STATEX_ACTION_KEY, target)
+      statexActions = Reflect.getMetadata(STATEX_ACTION_KEY, target)
     }
-    refluxActions[propertyKey] = targetAction
-    Reflect.defineMetadata(STATEX_ACTION_KEY, refluxActions, target)
+    statexActions[propertyKey] = targetAction
+    Reflect.defineMetadata(STATEX_ACTION_KEY, statexActions, target)
 
     return {
-      value: function (state: any, action: Action): Observable<any> {
-        return descriptor.value.call(this, state, action)
+      value: function (state: any, payload: Action): Observable<any> {
+        return descriptor.value.call(this, state, payload)
       }
     }
   }
