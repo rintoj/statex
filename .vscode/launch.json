@@ -10,8 +10,8 @@
       "name": "Mocha Tests",
       "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
       "args": [
-        "--compilers",
-        "ts:ts-node/register,tsx:ts-node/register",
+        "--require",
+        "ts-node/register",
         "-w",
         "--timeout",
         "999999",

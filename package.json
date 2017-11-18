@@ -10,8 +10,9 @@
     "process": "node ./scripts/process.js",
     "clean": "node ./scripts/clean.js",
     "prepublish": "npm run build",
-    "test": "mocha --compilers ts:ts-node/register,tsx:ts-node/register src/**/*.test.ts",
-    "tdd": "npm run test -- -w -R min"
+    "test": "mocha --require ts-node/register src/**/*.test.ts -R min",
+    "coverage": "nyc npm run test",
+    "tdd": "npm run test -- -w"
   },
   "keywords": [],
   "author": "Rinto Jose",
@@ -42,6 +43,7 @@
     "chai-spies-next": "^0.9.3",
     "fs-extra": "^3.0.1",
     "mocha": "^4.0.1",
+    "nyc": "^11.3.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "resolvable": "^1.0.1",
@@ -51,5 +53,24 @@
     "tslint": "^5.3.2",
     "tslint-no-unused-expression-chai": "0.0.3",
     "typescript": "^2.3.3"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "per-file": true,
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "**/node_modules/**",
+      "**/.git/**",
+      "**/dist/**"
+    ],
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ],
+    "cache": true
   }
 }
