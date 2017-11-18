@@ -1,7 +1,10 @@
+import Mocha from 'mocha'
 import * as chai from 'chai'
 
 import { Action } from './action'
+import { Observer } from 'rxjs/Observer'
 import { initialize } from './init'
+import { Observable } from 'rxjs/Observable'
 import { ReplaceableState } from './replaceable-state'
 
 // use spies
@@ -119,17 +122,37 @@ describe('Action', () => {
     expect(() => new SampleAction().dispatch()).not.to.throw()
   })
 
-  it('should call the returned callback function with current state, if reducer returns a function', () => {
+  it('should call the returned callback function with current state, if reducer returns a function', async () => {
+    initialize({ initialState: true })
     class SampleAction extends Action { }
     const callback = chai.spy(() => ({ testState: true }))
-    const reducer1 = chai.spy(() => callback)
+    const reducer1 = chai.spy(() => {
+      return Observable.create((observer: Observer<any>) => {
+        setTimeout(() => {
+          observer.next(callback)
+          observer.complete()
+        }, 100)
+        observer.next({ reducerCalled: true })
+      })
+    })
     new SampleAction().subscribe(reducer1, this)
 
     const action1 = new SampleAction()
-    action1.dispatch()
-    expect(reducer1).to.have.been.called.with({}, action1)
-    action1.dispatch()
-    expect(reducer1).to.have.been.called.with({ testState: true }, action1)
+    await action1.dispatch()
+    expect(reducer1).to.have.been.called.with({ initialState: true }, action1)
+    await action1.dispatch()
+    expect(callback).to.have.been.called.with({ initialState: true, reducerCalled: true })
+    expect(reducer1).to.have.been.called.with({ initialState: true, reducerCalled: true, testState: true }, action1)
+  })
+
+  it('should not fail even if the reducer function reject with an error', async () => {
+    class SampleAction extends Action { }
+    const reducer = chai.spy(() => Promise.reject('Simulated Error'))
+    new SampleAction().subscribe(reducer, this)
+
+    const errorHandler = chai.spy()
+    await new SampleAction().dispatch().then(() => undefined, errorHandler)
+    expect(errorHandler).to.have.been.called()
   })
 
 })

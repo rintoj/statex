@@ -124,7 +124,7 @@ export class Action {
 
       // if reducer returns function call that function to resolve state
       .map((state: any) => {
-        if (typeof state === 'function') return state()
+        if (typeof state === 'function') return state(State.current)
         return state
       })
 

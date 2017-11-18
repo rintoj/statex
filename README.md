@@ -505,15 +505,28 @@ add(state: AppState, payload: AddTodoAction): AppState {
 }
 ```
 
+* A port of the application state using async and await (RECOMMENDED)
+```ts
+@action()
+async add(state: AppState, payload: AddTodoAction): Promise<AppState> {
+  const response = await asyncTask();
+  return (currentState: AppState) => ({
+    todos: (currentState.todos || []).concat(response.todo)
+  })
+}
+```
+
+> Please note: the state might change by the time the `asyncTask()` is completed. So it is recommended to return a function that will receive the current state as shown above. Do all calculations based on `currentState` instead of `state`
+
 * A portion of the application state wrapped in Promise, if it needs to perform an async task.
 ```ts
 @action()
-add(state: AppState, payload: AddTodoAction): Promise<AppStore> {
+add(state: AppState, payload: AddTodoAction): Promise<AppState> {
   return new Promise((resolve, reject) => {
     asyncTask().then(() => {
-      resolve({
-        todos: (state.todos || []).concat(payload.todo)
-      })
+      resolve((currentState: AppState) => ({
+        todos: (currentState.todos || []).concat(payload.todo)
+      }))
     })
   })
 }
@@ -530,10 +543,10 @@ add(state: AppState, payload: AddTodoAction): Observable<AppState> {
   return Observable.create((observer: Observer<AppState>) => {
     observer.next({ showLoader: true })
     asyncTask().then(() => {
-      observer.next({
-        todos: (state.todos || []).concat(payload.todo),
+      observer.next((currentState: AppState) => ({
+        todos: (currentState.todos || []).concat(payload.todo),
         showLoader: false
-      })
+      }))
       observer.complete()
     })
   })

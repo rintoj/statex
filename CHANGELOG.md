@@ -1,3 +1,8 @@
+# v1.1.0
+
+* Feature: Enable reducer function to return a function to get the current status
+* Feature: Add `showError` flag to initialization options.
+
 # v1.0.5
 
 * bug fix: lastAction ends up on never ending recursive function call.
