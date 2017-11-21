@@ -120,6 +120,11 @@ var Action = /** @class */ (function () {
             return result;
         })
             .map(function (state) {
+            if (typeof state === 'function')
+                return state(state_1.State.current);
+            return state;
+        })
+            .map(function (state) {
             if (state instanceof replaceable_state_1.ReplaceableState) {
                 // replace the state with the new one if not 'undefined'
                 return Immutable.from(state.state || {});

@@ -7,7 +7,7 @@ import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/skipWhile';
 import { ActionObserver } from './observers';
 /**
- * Defines an action which an be extended to implement custom actions for a reflux application
+ * Defines an action which an be extended to implement custom actions for a statex application
  *
  * @example
  *
@@ -32,6 +32,7 @@ import { ActionObserver } from './observers';
  */
 export declare class Action {
     private static _lastAction;
+    private static _showError;
     private static identities;
     private static subscriptions;
     /**
@@ -43,6 +44,10 @@ export declare class Action {
      * @memberOf Action
      */
     static readonly lastAction: Action;
+    /**
+     * Set show error flag, if set to true, this module must show errors on Action rejections
+     */
+    static showError: boolean;
     /**
      * Returns identity of this class
      *
