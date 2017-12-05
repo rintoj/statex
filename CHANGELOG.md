@@ -1,3 +1,7 @@
+# v1.1.1
+
+* Bug fix: Lock down RXJS to 5.4.0
+
 # v1.1.0
 
 * Feature: Enable reducer function to return a function to get the current status
