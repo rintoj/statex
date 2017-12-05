@@ -1,6 +1,6 @@
 # v1.1.1
 
-* Bug fix: Lock down RXJS to 5.4.0
+* Bug fix: Lock down `rxjs` to 5.4.0
 
 # v1.1.0
 
