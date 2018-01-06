@@ -3,6 +3,7 @@ import { Observer } from 'rxjs/Observer'
 import { initialize } from './init'
 import { Observable } from 'rxjs/Observable'
 import { ReplaceableState } from './replaceable-state'
+import { State } from './state'
 
 describe('Action', () => {
 
@@ -119,6 +120,38 @@ describe('Action', () => {
     initialize({ initialState: true })
     class SampleAction extends Action { }
     const callback = jest.fn(() => ({ testState: true }))
+    const reducer1 = jest.fn(() => callback)
+    new SampleAction().subscribe(reducer1, this)
+
+    const action1 = new SampleAction()
+    await action1.dispatch()
+    expect(reducer1).toHaveBeenCalledWith({ initialState: true }, action1)
+    await action1.dispatch()
+    expect(reducer1).toHaveBeenCalledWith({ initialState: true, testState: true }, action1)
+  })
+
+  test('should call the returned callback function with current state, if reducer returns a function throw Promise', async () => {
+    initialize({ initialState: true })
+    class SampleAction extends Action { }
+    const callback = jest.fn(() => ({ testState: true }))
+    const reducer1 = jest.fn(() => {
+      return new Promise(resolve => {
+        setTimeout(() => { resolve(callback) }, 100)
+      })
+    })
+    new SampleAction().subscribe(reducer1, this)
+
+    const action1 = new SampleAction()
+    await action1.dispatch()
+    expect(reducer1).toHaveBeenCalledWith({ initialState: true }, action1)
+    await action1.dispatch()
+    expect(reducer1).toHaveBeenCalledWith({ initialState: true, testState: true }, action1)
+  })
+
+  test('should call the returned callback function with current state, if reducer returns a function throw Observables', async () => {
+    initialize({ initialState: true })
+    class SampleAction extends Action { }
+    const callback = jest.fn(() => ({ testState: true }))
     const reducer1 = jest.fn(() => {
       return Observable.create((observer: Observer<any>) => {
         setTimeout(() => {
@@ -136,6 +169,48 @@ describe('Action', () => {
     await action1.dispatch()
     expect(callback).toHaveBeenCalledWith({ initialState: true, reducerCalled: true })
     expect(reducer1).toHaveBeenCalledWith({ initialState: true, reducerCalled: true, testState: true }, action1)
+  })
+
+  test('should update the state every time reducer returns a new state', async () => {
+    const dataObserver = jest.fn()
+    State.subscribe(dataObserver, undefined, undefined)
+
+    class SampleAction extends Action { }
+    const reducer = jest.fn(() => ({ test: true }))
+    new SampleAction().subscribe(reducer, this)
+
+    await new SampleAction().dispatch()
+    expect(dataObserver).toHaveBeenCalledWith({ test: true })
+  })
+
+  test('should update the state every time reducer returns a new state throw promise', async () => {
+    const dataObserver = jest.fn()
+    State.subscribe(dataObserver, undefined, undefined)
+
+    class SampleAction extends Action { }
+    const reducer = jest.fn(() => new Promise(resolve => {
+      setTimeout(() => resolve({ test: true }), 100)
+    }))
+    new SampleAction().subscribe(reducer, this)
+
+    await new SampleAction().dispatch()
+    expect(dataObserver).toHaveBeenCalledWith({ test: true })
+  })
+
+  test('should update the state every time reducer returns a new state throw observables', async () => {
+    const dataObserver = jest.fn()
+    State.subscribe(dataObserver, undefined, undefined)
+
+    class SampleAction extends Action { }
+    const reducer = jest.fn(() => Observable.create((observer: Observer<any>) => {
+      setTimeout(() => observer.next({ test: true }), 100)
+    }))
+    new SampleAction().subscribe(reducer, this)
+
+    new SampleAction().dispatch()
+    setTimeout(() => {
+      expect(dataObserver).toHaveBeenCalledWith({ test: true })
+    }, 200)
   })
 
   test('should not fail even if the reducer function reject with an error', async () => {
