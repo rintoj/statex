@@ -17,16 +17,15 @@ declare var Reflect: any
  * @param {any} selectorFunc
  */
 export function bindData(target: any, key: string, selector: StateSelector): Subscription {
-  return State.select(selector)
-    .subscribe(args => {
-      if (typeof target.setState === 'function') {
-        let state = {}
-        state[key] = args
-        target.setState(state)
-      }
-      if (typeof target[key] === 'function') return target[key].call(target, args)
-      target[key] = args
-    })
+  return State.select(selector).subscribe(args => {
+    if (typeof target.setState === 'function') {
+      let state = {}
+      state[key] = args
+      target.setState(state)
+    }
+    if (typeof target[key] === 'function') return target[key].call(target, args)
+    target[key] = args
+  })
 }
 
 /**
@@ -53,7 +52,7 @@ export function action(targetAction?: Action) {
 
     if (targetAction == undefined) {
       let metadata = Reflect.getMetadata('design:paramtypes', target, propertyKey)
-      if (metadata.length < 2) throw new Error('@action() must be applied to a function with two arguments. ' +
+      if (metadata == undefined || metadata.length < 2) throw new Error('@action() must be applied to a function with two arguments. ' +
         'eg: reducer(state: State, action: SubclassOfAction): State { }')
       targetAction = metadata[1]
     }
