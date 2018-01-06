@@ -1,5 +1,6 @@
 import * as Immutable from 'seamless-immutable'
 
+import 'rxjs/add/operator/share'
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 import { Observable } from 'rxjs/Observable'
 import { StateSelector } from './state-selector'
@@ -69,17 +70,13 @@ export class State {
 
     return Observable.create(subscriber => {
       let previousState: any
-      let subscription = this.subscribe(
-        state => {
-          let selection = select(state, selector)
-          if (selection !== select(previousState, selector)) {
-            previousState = state
-            subscriber.next(selection)
-          }
-        },
-        error => subscriber.error(error),
-        () => subscriber.complete()
-      )
+      let subscription = this.subscribe(state => {
+        let selection = select(state, selector)
+        if (selection !== select(previousState, selector)) {
+          previousState = state
+          subscriber.next(selection)
+        }
+      }, undefined, undefined)
 
       return subscription
     }).share()
