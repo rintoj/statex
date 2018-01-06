@@ -1,15 +1,8 @@
-import Mocha from 'mocha'
-import * as chai from 'chai'
-
 import { Action } from './action'
 import { Observer } from 'rxjs/Observer'
 import { initialize } from './init'
 import { Observable } from 'rxjs/Observable'
 import { ReplaceableState } from './replaceable-state'
-
-// use spies
-chai.use(require('chai-spies-next'))
-const { expect } = chai
 
 describe('Action', () => {
 
@@ -20,45 +13,45 @@ describe('Action', () => {
     initialize({})
   })
 
-  it('should call a reducer function when an action is dispatched', () => {
-    const reducer = chai.spy()
+  test('should call a reducer function when an action is dispatched', () => {
+    const reducer = jest.fn()
     new TestAction().subscribe(reducer, this)
     new TestAction().dispatch()
-    expect(reducer).to.have.been.called.once
+    expect(reducer).toHaveBeenCalledTimes(1)
   })
 
-  it('should call all reducer functions when an action is dispatched', () => {
-    const reducer1 = chai.spy()
-    const reducer2 = chai.spy()
+  test('should call all reducer functions when an action is dispatched', () => {
+    const reducer1 = jest.fn()
+    const reducer2 = jest.fn()
     new TestAction().subscribe(reducer1, this)
     new TestAction().subscribe(reducer2, this)
     new TestAction().dispatch()
-    expect(reducer1).to.have.been.called.once
-    expect(reducer2).to.have.been.called.once
+    expect(reducer1).toHaveBeenCalledTimes(1)
+    expect(reducer2).toHaveBeenCalledTimes(1)
   })
 
-  it('should call reducer functions subscribed to an action when an action is dispatched', () => {
-    const reducer1 = chai.spy()
-    const reducer2 = chai.spy()
+  test('should call reducer functions subscribed to an action when an action is dispatched', () => {
+    const reducer1 = jest.fn()
+    const reducer2 = jest.fn()
     new TestAction().subscribe(reducer1, this)
     new UnrelatedAction().subscribe(reducer2, this)
     new TestAction().dispatch()
-    expect(reducer1).to.have.been.called.once
-    expect(reducer2).not.to.have.been.called.once
+    expect(reducer1).toHaveBeenCalledTimes(1)
+    expect(reducer2).not.toHaveBeenCalledTimes(1)
   })
 
-  it('should call reducer function with state and payload', () => {
-    const reducer1 = chai.spy()
+  test('should call reducer function with state and payload', () => {
+    const reducer1 = jest.fn()
     new TestAction().subscribe(reducer1, this)
     const testAction = new TestAction()
     testAction.dispatch()
-    expect(reducer1).to.have.been.called.with({}, testAction)
+    expect(reducer1).toHaveBeenCalledWith({}, testAction)
   })
 
-  it('should merge the state returned by the reducer function into global state', () => {
+  test('should merge the state returned by the reducer function into global state', () => {
 
     // create a reducer function and subscribe to TestAction
-    const reducer1 = chai.spy(() => ({ testState: true }))
+    const reducer1 = jest.fn(() => ({ testState: true }))
     new TestAction().subscribe(reducer1, this)
 
     // create an action
@@ -66,67 +59,67 @@ describe('Action', () => {
 
     // update the state to { testState: true }
     testAction.dispatch()
-    expect(reducer1).to.have.been.called.with({}, testAction)
+    expect(reducer1).toHaveBeenCalledWith({}, testAction)
 
     // checking if updated is made available to second call
     testAction.dispatch()
-    expect(reducer1).to.have.been.called.with({ testState: true }, testAction)
+    expect(reducer1).toHaveBeenCalledWith({ testState: true }, testAction)
   })
 
-  it('should partially merge the state returned by the reducer function into global state', () => {
+  test('should partially merge the state returned by the reducer function into global state', () => {
 
     // create a reducer function and subscribe to TestAction
-    const reducer1 = chai.spy(() => ({ testState: true }))
+    const reducer1 = jest.fn(() => ({ testState: true }))
     new TestAction().subscribe(reducer1, this)
 
     // create a reducer function and subscribe to TestAction
-    const reducer2 = chai.spy(() => ({ anotherState: true }))
+    const reducer2 = jest.fn(() => ({ anotherState: true }))
     new UnrelatedAction().subscribe(reducer2, this)
 
     // update the state to { testState: true }
     const testAction = new TestAction()
     testAction.dispatch()
-    expect(reducer1).to.have.been.called.with({}, testAction)
+    expect(reducer1).toHaveBeenCalledWith({}, testAction)
 
     const unrelatedAction = new UnrelatedAction()
     unrelatedAction.dispatch()
-    expect(reducer2).to.have.been.called.with({ testState: true }, unrelatedAction)
+    expect(reducer2).toHaveBeenCalledWith({ testState: true }, unrelatedAction)
     unrelatedAction.dispatch()
-    expect(reducer2).to.have.been.called.with({ testState: true, anotherState: true }, unrelatedAction)
+    expect(reducer2).toHaveBeenCalledWith({ testState: true, anotherState: true }, unrelatedAction)
   })
 
-  it('should replace the entire state if reducer function returns replaceable state', () => {
+  test('should replace the entire state if reducer function returns replaceable state', () => {
 
     // create a reducer function and subscribe to TestAction
-    const reducer1 = chai.spy(() => ({ testState: true }))
+    const reducer1 = jest.fn(() => ({ testState: true }))
     new TestAction().subscribe(reducer1, this)
 
     // create a reducer function and subscribe to TestAction
-    const reducer2 = chai.spy(() => new ReplaceableState({ anotherState: true }))
+    const reducer2 = jest.fn(() => new ReplaceableState({ anotherState: true }))
     new UnrelatedAction().subscribe(reducer2, this)
 
     // update the state to { testState: true }
     const testAction = new TestAction()
     testAction.dispatch()
-    expect(reducer1).to.have.been.called.with({}, testAction)
+    expect(reducer1).toHaveBeenCalledWith({}, testAction)
 
     const unrelatedAction = new UnrelatedAction()
     unrelatedAction.dispatch()
-    expect(reducer2).to.have.been.called.with({ testState: true }, unrelatedAction)
+    expect(reducer2).toHaveBeenCalledWith({ testState: true }, unrelatedAction)
     unrelatedAction.dispatch()
-    expect(reducer2).to.have.been.called.with({ anotherState: true }, unrelatedAction)
+    expect(reducer2).toHaveBeenCalledWith({ anotherState: true }, unrelatedAction)
   })
 
-  it('should not throw an error if an action is called without any subscription', () => {
+  test('should not throw an error if an action is called without any subscription', () => {
     class SampleAction extends Action { }
-    expect(() => new SampleAction().dispatch()).not.to.throw()
+    expect(() => new SampleAction().dispatch()).not.toThrow()
   })
 
-  it('should call the returned callback function with current state, if reducer returns a function', async () => {
+  test('should call the returned callback function with current state, if reducer returns a function', async () => {
     initialize({ initialState: true })
     class SampleAction extends Action { }
-    const callback = chai.spy(() => ({ testState: true }))
-    const reducer1 = chai.spy(() => {
+    const callback = jest.fn(() => ({ testState: true }))
+    const reducer1 = jest.fn(() => {
       return Observable.create((observer: Observer<any>) => {
         setTimeout(() => {
           observer.next(callback)
@@ -139,20 +132,43 @@ describe('Action', () => {
 
     const action1 = new SampleAction()
     await action1.dispatch()
-    expect(reducer1).to.have.been.called.with({ initialState: true }, action1)
+    expect(reducer1).toHaveBeenCalledWith({ initialState: true }, action1)
     await action1.dispatch()
-    expect(callback).to.have.been.called.with({ initialState: true, reducerCalled: true })
-    expect(reducer1).to.have.been.called.with({ initialState: true, reducerCalled: true, testState: true }, action1)
+    expect(callback).toHaveBeenCalledWith({ initialState: true, reducerCalled: true })
+    expect(reducer1).toHaveBeenCalledWith({ initialState: true, reducerCalled: true, testState: true }, action1)
   })
 
-  it('should not fail even if the reducer function reject with an error', async () => {
+  test('should not fail even if the reducer function reject with an error', async () => {
     class SampleAction extends Action { }
-    const reducer = chai.spy(() => Promise.reject('Simulated Error'))
+    const reducer = jest.fn(() => Promise.reject('Simulated Error'))
     new SampleAction().subscribe(reducer, this)
 
-    const errorHandler = chai.spy()
-    await new SampleAction().dispatch().then(() => undefined, errorHandler)
-    expect(errorHandler).to.have.been.called()
+    const errorHandler = jest.fn()
+    await new SampleAction().dispatch().then(undefined, errorHandler)
+    expect(errorHandler).toHaveBeenCalled()
+  })
+
+  test('should return the last action', async () => {
+    Action.showError = true
+    class SampleAction1 extends Action { }
+    class SampleAction2 extends Action { }
+    await new SampleAction1().dispatch()
+    await new SampleAction2().dispatch()
+    expect(Action.lastAction).toBeInstanceOf(SampleAction2)
+  })
+
+  test('should show console errors if "showError" flag is set to true', async () => {
+    console.error = jest.fn()
+    Action.showError = true
+    class SampleAction extends Action { }
+    const reducer = jest.fn(() => Promise.reject('Simulated Error'))
+    new SampleAction().subscribe(reducer, this)
+    try {
+      await new SampleAction().dispatch()
+    } catch (e) {
+      // do nothing
+    }
+    expect(console.error).toHaveBeenCalledWith('Simulated Error')
   })
 
 })

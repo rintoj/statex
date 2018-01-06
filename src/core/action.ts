@@ -132,7 +132,7 @@ export class Action {
       .map((state: any) => {
         if (state instanceof ReplaceableState) {
           // replace the state with the new one if not 'undefined'
-          return Immutable.from((state as ReplaceableState).state || {})
+          return Immutable.from((state as ReplaceableState).state)
         } else if (state != undefined) {
           // merge the state with existing state
           return State.current.merge(state, { deep: true })

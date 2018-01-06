@@ -15,10 +15,7 @@
       "es6"
     ],
     "types": [
-      "node",
-      "mocha",
-      "chai",
-      "chai-spies"
+      "node"
     ]
   },
   "exclude": [
@@ -26,7 +23,8 @@
     "examples",
     "dist",
     "lib",
-    "node_modules"
+    "node_modules",
+    "src/**/*.test.ts"
   ],
   "compileOnSave": false,
   "buildOnSave": false,
