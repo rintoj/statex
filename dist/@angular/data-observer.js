@@ -31,7 +31,6 @@ var DataObserver = /** @class */ (function () {
     };
     DataObserver.prototype.ngOnDestroy = function () {
         // empty on purpose
-        core_1.unsubscribe.bind(this)();
     };
     return DataObserver;
 }());

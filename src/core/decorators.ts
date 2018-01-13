@@ -92,7 +92,10 @@ export function data(selector: StateSelector, bindImmediate?: boolean) {
 
     bindingsMeta.selectors[propertyKey] = selector
     if (bindImmediate) {
-      bindingsMeta.subscriptions.push(bindData(target, propertyKey, selector))
+      bindingsMeta.subscriptions.push({
+        target: target,
+        subscription: bindData(target, propertyKey, selector)
+      })
     }
     Reflect.defineMetadata(STATEX_DATA_BINDINGS_KEY, bindingsMeta, metaTarget)
   }
@@ -105,13 +108,14 @@ export function data(selector: StateSelector, bindImmediate?: boolean) {
  */
 export function subscribe(propsClass) {
   let dataBindings = Reflect.getMetadata(STATEX_DATA_BINDINGS_KEY, propsClass || this)
-  if (dataBindings != undefined && dataBindings.destroyed === true) {
-    dataBindings.subscriptions = dataBindings.subscriptions.concat(
-      Object.keys(dataBindings.selectors)
-        .map(key => bindData(this, key, dataBindings.selectors[key]))
+  if (dataBindings != undefined) {
+    const selectors = dataBindings.selectors || {}
+    dataBindings.subscriptions = (dataBindings.subscriptions || []).concat(
+      Object.keys(selectors).map(key => ({
+        target: this,
+        subscription: bindData(this, key, selectors[key])
+      }))
     )
-
-    dataBindings.destroyed = false
     Reflect.defineMetadata(STATEX_DATA_BINDINGS_KEY, dataBindings, this)
   }
 }
@@ -124,9 +128,9 @@ export function subscribe(propsClass) {
 export function unsubscribe() {
   let dataBindings = Reflect.getMetadata(STATEX_DATA_BINDINGS_KEY, this)
   if (dataBindings != undefined) {
-    dataBindings.subscriptions.forEach(subscription => subscription.unsubscribe())
-    dataBindings.subscriptions = []
-    dataBindings.destroyed = true
+    const subscriptions = dataBindings.subscriptions || []
+    subscriptions.forEach(item => item.target === this && item.subscription != undefined && item.subscription.unsubscribe())
+    dataBindings.subscriptions = subscriptions.filter(item => item.target !== this)
     Reflect.defineMetadata(STATEX_DATA_BINDINGS_KEY, dataBindings, this)
   }
 }

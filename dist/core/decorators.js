@@ -11,8 +11,7 @@ var state_1 = require("./state");
  * @param {any} selectorFunc
  */
 function bindData(target, key, selector) {
-    return state_1.State.select(selector)
-        .subscribe(function (args) {
+    return state_1.State.select(selector).subscribe(function (args) {
         if (typeof target.setState === 'function') {
             var state = {};
             state[key] = args;
@@ -46,7 +45,7 @@ function action(targetAction) {
     return function (target, propertyKey, descriptor) {
         if (targetAction == undefined) {
             var metadata = Reflect.getMetadata('design:paramtypes', target, propertyKey);
-            if (metadata.length < 2)
+            if (metadata == undefined || metadata.length < 2)
                 throw new Error('@action() must be applied to a function with two arguments. ' +
                     'eg: reducer(state: State, action: SubclassOfAction): State { }');
             targetAction = metadata[1];
@@ -83,7 +82,10 @@ function data(selector, bindImmediate) {
         }
         bindingsMeta.selectors[propertyKey] = selector;
         if (bindImmediate) {
-            bindingsMeta.subscriptions.push(bindData(target, propertyKey, selector));
+            bindingsMeta.subscriptions.push({
+                target: target,
+                subscription: bindData(target, propertyKey, selector)
+            });
         }
         Reflect.defineMetadata(constance_1.STATEX_DATA_BINDINGS_KEY, bindingsMeta, metaTarget);
     };
@@ -97,10 +99,12 @@ exports.data = data;
 function subscribe(propsClass) {
     var _this = this;
     var dataBindings = Reflect.getMetadata(constance_1.STATEX_DATA_BINDINGS_KEY, propsClass || this);
-    if (dataBindings != undefined && dataBindings.destroyed === true) {
-        dataBindings.subscriptions = dataBindings.subscriptions.concat(Object.keys(dataBindings.selectors)
-            .map(function (key) { return bindData(_this, key, dataBindings.selectors[key]); }));
-        dataBindings.destroyed = false;
+    if (dataBindings != undefined) {
+        var selectors_1 = dataBindings.selectors || {};
+        dataBindings.subscriptions = (dataBindings.subscriptions || []).concat(Object.keys(selectors_1).map(function (key) { return ({
+            target: _this,
+            subscription: bindData(_this, key, selectors_1[key])
+        }); }));
         Reflect.defineMetadata(constance_1.STATEX_DATA_BINDINGS_KEY, dataBindings, this);
     }
 }
@@ -111,11 +115,12 @@ exports.subscribe = subscribe;
  * @export
  */
 function unsubscribe() {
+    var _this = this;
     var dataBindings = Reflect.getMetadata(constance_1.STATEX_DATA_BINDINGS_KEY, this);
     if (dataBindings != undefined) {
-        dataBindings.subscriptions.forEach(function (subscription) { return subscription.unsubscribe(); });
-        dataBindings.subscriptions = [];
-        dataBindings.destroyed = true;
+        var subscriptions = dataBindings.subscriptions || [];
+        subscriptions.forEach(function (item) { return item.target === _this && item.subscription != undefined && item.subscription.unsubscribe(); });
+        dataBindings.subscriptions = subscriptions.filter(function (item) { return item.target !== _this; });
         Reflect.defineMetadata(constance_1.STATEX_DATA_BINDINGS_KEY, dataBindings, this);
     }
 }

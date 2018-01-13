@@ -1,3 +1,7 @@
+# v1.1.2
+
+* Bug fix: Selectors Broken in *ngFor Components #5
+
 # v1.1.1
 
 * Bug fix: Lock down `rxjs` to 5.4.0

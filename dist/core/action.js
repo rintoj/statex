@@ -127,7 +127,7 @@ var Action = /** @class */ (function () {
             .map(function (state) {
             if (state instanceof replaceable_state_1.ReplaceableState) {
                 // replace the state with the new one if not 'undefined'
-                return Immutable.from(state.state || {});
+                return Immutable.from(state.state);
             }
             else if (state != undefined) {
                 // merge the state with existing state

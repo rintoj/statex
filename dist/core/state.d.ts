@@ -1,3 +1,4 @@
+import 'rxjs/add/operator/share';
 import { Observable } from 'rxjs/Observable';
 import { StateSelector } from './state-selector';
 import { Subscription } from 'rxjs/Subscription';

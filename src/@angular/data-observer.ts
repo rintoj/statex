@@ -33,6 +33,5 @@ export class DataObserver implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     // empty on purpose
-    unsubscribe.bind(this)()
   }
 }

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Immutable = require("seamless-immutable");
+require("rxjs/add/operator/share");
 var BehaviorSubject_1 = require("rxjs/BehaviorSubject");
 var Observable_1 = require("rxjs/Observable");
 /**
@@ -74,7 +75,7 @@ var State = /** @class */ (function () {
                     previousState = state;
                     subscriber.next(selection);
                 }
-            }, function (error) { return subscriber.error(error); }, function () { return subscriber.complete(); });
+            }, undefined, undefined);
             return subscription;
         }).share();
     };
