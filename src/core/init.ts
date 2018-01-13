@@ -16,7 +16,7 @@ export function initialize(initialState: any, options?: InitOptions) {
 
   const cacheKey = `statex-cache:${options.domain}`
 
-  if (options.hotLoad) {
+  if (options.hotLoad && typeof localStorage !== 'undefined') {
     // for dev builds
     State.next(Immutable.from(JSON.parse(
       localStorage.getItem(cacheKey) || 'null'
