@@ -1,3 +1,7 @@
+# v1.1.3
+
+* Bug fix: Refrain from using browser specific tech #1
+
 # v1.1.2
 
 * Bug fix: Selectors Broken in *ngFor Components #5

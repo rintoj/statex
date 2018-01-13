@@ -7,7 +7,7 @@ function initialize(initialState, options) {
     options = options || { domain: 'default' };
     action_1.Action.showError = options.showError;
     var cacheKey = "statex-cache:" + options.domain;
-    if (options.hotLoad) {
+    if (options.hotLoad && typeof localStorage !== 'undefined') {
         // for dev builds
         state_1.State.next(Immutable.from(JSON.parse(localStorage.getItem(cacheKey) || 'null') || initialState));
         state_1.State.subscribe(function (state) { return localStorage.setItem(cacheKey, JSON.stringify(state)); }, function (error) { return console.error(error); }, undefined);
