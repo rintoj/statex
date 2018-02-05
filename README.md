@@ -468,7 +468,7 @@ export class AppModule { }
   ....
 })
 export class AppComponent {
-  constructor(private stores: STORES) { }
+  constructor(private stores: Stores) { }
 }
 ```
 
