@@ -20,7 +20,7 @@ export class TodoStore extends Store {
   }
 
   @action()
-  add(state: AppState, action: AddTodoAction): AppState {
+  add(state: AppState, action: AddTodoAction): ReplaceableState {
     return new ReplaceableState({
       todos: (state.todos || []).concat(
         Object.assign({ id: this.generateId() }, action.todo)
@@ -72,7 +72,7 @@ export class TodoStore extends Store {
     }).share()
   }
 
-  private generateId(): AppState {
+  private generateId(): string {
     return btoa(Math.random() + '').toLowerCase().substr(6, 6)
   }
 
