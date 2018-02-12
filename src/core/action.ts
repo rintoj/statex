@@ -6,7 +6,7 @@ import 'rxjs/add/operator/mergeMap'
 import 'rxjs/add/operator/share'
 import 'rxjs/add/operator/skipWhile'
 
-import * as Immutable from 'seamless-immutable'
+import Immutable from './immutable'
 
 import { ActionObserver } from './observers'
 import { Observable } from 'rxjs/Observable'

@@ -1,4 +1,4 @@
-import * as Immutable from 'seamless-immutable'
+import Immutable from './immutable'
 
 import 'rxjs/add/operator/share'
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
@@ -83,7 +83,7 @@ export class State {
   }
 
   constructor() {
-    this.currentState = Immutable.from<any>({})
+    this.currentState = Immutable.from({})
     this.subject = new BehaviorSubject(this.currentState)
     this.subject.subscribe(state => this.currentState = state)
   }

@@ -7,7 +7,7 @@ require("rxjs/add/operator/map");
 require("rxjs/add/operator/mergeMap");
 require("rxjs/add/operator/share");
 require("rxjs/add/operator/skipWhile");
-var Immutable = require("seamless-immutable");
+var immutable_1 = require("./immutable");
 var Observable_1 = require("rxjs/Observable");
 var replaceable_state_1 = require("./replaceable-state");
 var state_1 = require("./state");
@@ -127,7 +127,7 @@ var Action = /** @class */ (function () {
             .map(function (state) {
             if (state instanceof replaceable_state_1.ReplaceableState) {
                 // replace the state with the new one if not 'undefined'
-                return Immutable.from(state.state);
+                return immutable_1.default.from(state.state);
             }
             else if (state != undefined) {
                 // merge the state with existing state

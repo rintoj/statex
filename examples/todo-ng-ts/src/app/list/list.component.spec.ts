@@ -4,7 +4,7 @@ import { ComponentFixture } from '@angular/core/testing'
 import { DebugElement } from '@angular/core'
 import { By } from '@angular/platform-browser'
 import { State, initialize } from 'statex'
-import { TodoListComponent } from '.'
+import { TodoListComponent } from './list.component'
 import { ToggleAllTodosAction, ToggleTodoAction, RemoveTodoAction } from '../../action'
 
 describe('TodoHeaderComponent', () => {

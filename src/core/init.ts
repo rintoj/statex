@@ -1,4 +1,4 @@
-import * as Immutable from 'seamless-immutable'
+import Immutable from './immutable'
 
 import { State } from './state'
 import { Action } from './action'

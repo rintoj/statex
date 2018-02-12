@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Immutable = require("seamless-immutable");
+var immutable_1 = require("./immutable");
 require("rxjs/add/operator/share");
 var BehaviorSubject_1 = require("rxjs/BehaviorSubject");
 var Observable_1 = require("rxjs/Observable");
@@ -31,7 +31,7 @@ var Observable_1 = require("rxjs/Observable");
 var State = /** @class */ (function () {
     function State() {
         var _this = this;
-        this.currentState = Immutable.from({});
+        this.currentState = immutable_1.default.from({});
         this.subject = new BehaviorSubject_1.BehaviorSubject(this.currentState);
         this.subject.subscribe(function (state) { return _this.currentState = state; });
     }

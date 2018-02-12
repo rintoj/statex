@@ -1,3 +1,7 @@
+# v1.1.4
+
+* Bug fix: Use production version of seamless-immutable when `process.env.NODE_ENV=production` #8
+
 # v1.1.3
 
 * Bug fix: Refrain from using browser specific tech #1
