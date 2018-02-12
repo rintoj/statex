@@ -6,7 +6,7 @@ import { TodoService } from 'service/todo.service'
 import { Observable } from 'rxjs/Observable'
 import { Todo } from 'state'
 import { Observer } from 'rxjs'
-import { State } from 'statex'
+import { State, initialize } from 'statex'
 import { fakeAsync } from '@angular/core/testing'
 import { ToggleAllTodosAction, SetFilterAction } from '../action/todo-action'
 
@@ -25,11 +25,12 @@ describe('Todo Store', () => {
 
   let todoStore
 
-  beforeEach(() => {
+  beforeEach((done) => {
     TestBed.configureTestingModule({
       providers: [TodoStore, { provide: TodoService, useClass: MockTodoService }]
     })
-    State.next({}) // reset state before every test case
+    initialize({}) // reset state before every test case
+    done()
   })
 
   it('should add a todo when AddTodoAction is dispatched', inject([TodoStore], () => new Promise(async () => {
@@ -62,16 +63,6 @@ describe('Todo Store', () => {
     await new AddTodoAction({ text: 'Todo3', completed: true }).dispatch()
     const state = await new RemoveCompletedTodosAction().dispatch()
     expect(state.todos.length).toEqual(1)
-  })))
-
-  it('should toggle all todos when ToggleAllTodosAction is dispatched', inject([TodoStore], () => new Promise(async () => {
-    await new AddTodoAction({ text: 'Todo1' }).dispatch()
-    await new AddTodoAction({ text: 'Todo2', completed: true }).dispatch()
-    await new AddTodoAction({ text: 'Todo3', completed: true }).dispatch()
-    let state = await new ToggleAllTodosAction(true).dispatch()
-    expect(state.todos.map(t => t.completed).filter(i => i !== true)).toEqual(0)
-    state = await new ToggleAllTodosAction(false).dispatch()
-    expect(state.todos.map(t => t.completed).filter(i => i !== false)).toEqual(0)
   })))
 
   it('should set the view filter when SetFilterAction is dispatched', inject([TodoStore], () => new Promise(async () => {
