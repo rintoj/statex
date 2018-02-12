@@ -6,7 +6,7 @@ import { Component } from '@angular/core'
   template: `
     <header id="header">
       <h1>todos</h1>
-      <form id="todo-form" (submit)="addTodo()">
+      <form id="todo-form" (submit)="addTodo()" action="#">
         <input id="new-todo" placeholder="What needs to be done?" [(ngModel)]="todoText" name="todo" autoFocus autoComplete="off">
       </form>
     </header>
