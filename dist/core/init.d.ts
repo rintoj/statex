@@ -1,5 +1,6 @@
 export interface InitOptions {
     hotLoad?: boolean;
+    cache?: string;
     showError?: boolean;
     domain?: string;
 }

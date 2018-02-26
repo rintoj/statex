@@ -585,8 +585,18 @@ import { INITIAL_STATE } from './../state'
 import { initialize } from 'statex/react'
 
 initialize(INITIAL_STATE, {
+
+  // set hot load to true to save and resume state between reloads
   hotLoad: process.env.NODE_ENV !== 'production',
+
+  // show reducer errors; turn this off for production builds for performance reasons
   showError: process.env.NODE_ENV !== 'production',
+  
+  // set this for electron apps so that state is saved to a local file instead of local storage 
+  // and thus avoid size constraints
+  cache: '.my-app-cache.json'
+  
+  // set this to uniquely identify your app in a common domain; in effect only if "cache" is not defined"
   domain: 'my-app'
 })
 
