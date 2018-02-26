@@ -1,3 +1,7 @@
+
+# v1.1.5
+* Feature: add cache attribute to initialize function
+
 # v1.1.4
 
 * Bug fix: Use production version of seamless-immutable when `process.env.NODE_ENV=production` #8
