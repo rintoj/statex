@@ -557,6 +557,28 @@ add(state: AppState, payload: AddTodoAction): Observable<AppState> {
 
 You can initialize the app state using the following code.
 
+```ts
+import { initialize } from 'statex'
+
+initialize(INITIAL_STATE, {
+
+  // set hot load to true to save and resume state between reloads
+  hotLoad: process.env.NODE_ENV !== 'production',
+
+  // show reducer errors; turn this off for production builds for performance reasons
+  showError: process.env.NODE_ENV !== 'production',
+  
+  // (electron only option) see electron section for details 
+  cache: '.my-app-cache.json'
+  
+  // set this to uniquely identify your app in a common domain; in effect only if "cache" is not defined"
+  domain: 'my-app'
+})
+```
+
+If you set `hotLoad` to true, every change to the state is preserved in localStorage and re-initialized upon refresh. If a state exists in localStorage `INITIAL_STATE` will be ignored. This is useful for development builds because developers can return to the same screen after every refresh. Remember that the screens must react to state (reactive UI) in-order to achieve this. `domain` is an optional string to uniquely identify your application. `showError`, if set to true, displays console errors when the actions are rejected.
+
+
 ## Angular
 
 ```ts
@@ -567,6 +589,7 @@ import { initialize } from 'statex/angular'
 
 initialize(INITIAL_STATE, {
   hotLoad: !environment.production,
+  showErro: !environment.production,
   domain: 'my-app'
 })
 
@@ -585,18 +608,8 @@ import { INITIAL_STATE } from './../state'
 import { initialize } from 'statex/react'
 
 initialize(INITIAL_STATE, {
-
-  // set hot load to true to save and resume state between reloads
   hotLoad: process.env.NODE_ENV !== 'production',
-
-  // show reducer errors; turn this off for production builds for performance reasons
   showError: process.env.NODE_ENV !== 'production',
-  
-  // set this for electron apps so that state is saved to a local file instead of local storage 
-  // and thus avoid size constraints
-  cache: '.my-app-cache.json'
-  
-  // set this to uniquely identify your app in a common domain; in effect only if "cache" is not defined"
   domain: 'my-app'
 })
 
@@ -604,7 +617,22 @@ import { AppComponent } from './app'
 ReactDOM.render(<AppComponent />, document.getElementById('root'))
 ```
 
-If you set `hotLoad` to true, every change to the state is preserved in localStorage and re-initialized upon refresh. If a state exists in localStorage `INITIAL_STATE` will be ignored. This is useful for development builds because developers can return to the same screen after every refresh. Remember that the screens must react to state (reactive UI) in-order to achieve this. `domain` is an optional string to uniquely identify your application. `showError`, if set to true, displays console errors when the actions are rejected.
+## Electron
+
+If you are building an electron app (using Angular or React), you can overcome the size limitation of localStorage using `cache` option. Set this property to a valid file name so that Statex will save the state in a local file instead of local storage. Remember to import `initialize` function from `statex/electron`.
+
+```ts
+...
+import * as os from 'os'
+import { INITIAL_STATE } from './../state'
+import { initialize } from 'statex/electron'
+
+initialize(INITIAL_STATE, {
+  hotLoad: process.env.NODE_ENV !== 'production',
+  showError: process.env.NODE_ENV !== 'production',
+  cache: path.resolve(os.tmpdir(), 'my-app-cache.json')
+})
+```
 
 # Immutable Application State
 To take best use of React's and Angular's change detection strategies we need to ensure that the state is indeed immutable. This module uses [seamless-immutable](https://github.com/rtfeldman/seamless-immutable) for immutability.

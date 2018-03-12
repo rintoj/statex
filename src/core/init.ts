@@ -17,14 +17,11 @@ export function initialize(initialState: any, options?: InitOptions) {
 
   const cacheKey = `statex-cache:${options.domain}`
 
-  if (options.hotLoad === true && options.cache != undefined) {
-    // for nodejs / electron projects
-    const fs = require('fs')
-    const cacheFile = require('path').resolve(process.cwd(), options.cache)
-    try { State.next(Immutable.from(JSON.parse(fs.readFileSync(cacheFile) || 'null') || initialState)) } catch (e) { /* ignore error */ }
-    State.subscribe(state => fs.writeFileSync(cacheFile, JSON.stringify(state)), error => console.error(error), undefined)
+  if (options.cache != undefined) {
+    throw new Error('statex:initialize: Option cache is not supported. Import initialize from statex/electron to use cache option')
+  }
 
-  } else if (options.hotLoad === true && typeof localStorage !== 'undefined') {
+  if (options.hotLoad === true && typeof localStorage !== 'undefined') {
     // for dev builds in browser
     State.next(Immutable.from(JSON.parse(localStorage.getItem(cacheKey) || 'null') || initialState))
     State.subscribe(state => localStorage.setItem(cacheKey, JSON.stringify(state)), error => console.error(error), undefined)
