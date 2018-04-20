@@ -15,7 +15,7 @@ function initialize(initialState, options) {
             state_1.State.next(immutable_1.default.from(JSON.parse(fs_1.readFileSync(cacheFile_1) || 'null') || initialState));
         }
         catch (e) { }
-        state_1.State.subscribe(function (state) { return fs_1.writeFileSync(cacheFile_1, JSON.stringify(state)); }, function (error) { return console.error(error); }, undefined);
+        state_1.State.subscribe(function (state) { return fs_1.writeFile(cacheFile_1, JSON.stringify(state)); }, function (error) { return console.error(error); }, undefined);
     }
     else {
         return init_1.initialize(initialState.options);

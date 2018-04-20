@@ -28,7 +28,7 @@ var Observable_1 = require("rxjs/Observable");
  * @class StateStream
  * @extends {BehaviorSubject}
  */
-var State = /** @class */ (function () {
+var State = (function () {
     function State() {
         var _this = this;
         this.currentState = immutable_1.default.from({});
@@ -79,9 +79,9 @@ var State = /** @class */ (function () {
             return subscription;
         }).share();
     };
-    State.state = new State();
     return State;
 }());
+State.state = new State();
 exports.State = State;
 /**
  * Run selector function on the given state and return it's result. Return undefined if an error occurred

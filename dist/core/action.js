@@ -35,7 +35,7 @@ var state_1 = require("./state");
  * @export
  * @class Action
  */
-var Action = /** @class */ (function () {
+var Action = (function () {
     function Action() {
     }
     Object.defineProperty(Action, "lastAction", {
@@ -155,8 +155,8 @@ var Action = /** @class */ (function () {
             }, function () { return resolve(state_1.State.current); });
         });
     };
-    Action.identities = [];
-    Action.subscriptions = [];
     return Action;
 }());
+Action.identities = [];
+Action.subscriptions = [];
 exports.Action = Action;

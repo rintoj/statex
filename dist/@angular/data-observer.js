@@ -12,7 +12,7 @@ var core_1 = require("../core");
  * @implements {OnInit}
  * @implements {OnDestroy}
  */
-var DataObserver = /** @class */ (function () {
+var DataObserver = (function () {
     function DataObserver() {
         var _this = this;
         var originalInit = this.ngOnInit;

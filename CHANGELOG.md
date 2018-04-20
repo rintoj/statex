@@ -1,4 +1,7 @@
 
+# v1.1.7
+* Performance: improve performance of state cache (writing time) for electron
+
 # v1.1.6
 * Bug fix: Fixes issue [#17](https://github.com/rintoj/statex/issues/17)
 
