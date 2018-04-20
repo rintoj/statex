@@ -1,4 +1,7 @@
 
+# v1.1.8
+* Bug fix: Fix warning around async cache write
+
 # v1.1.7
 * Performance: improve performance of state cache (writing time) for electron
 

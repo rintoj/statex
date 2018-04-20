@@ -14,7 +14,13 @@ export function initialize(initialState: any, options?: InitOptions) {
     const fs = require('fs')
     const cacheFile = require('path').resolve(process.cwd(), options.cache)
     try { State.next(Immutable.from(JSON.parse(fs.readFileSync(cacheFile) || 'null') || initialState)) } catch (e) { /* ignore error */ }
-    State.subscribe(state => fs.writeFile(cacheFile, JSON.stringify(state)), error => console.error(error), undefined)
+    State.subscribe(async (state) => {
+      try {
+        await fs.writeFile(cacheFile, JSON.stringify(state))
+      } catch (e) {
+        console.error(e)
+      }
+    }, error => console.error(error), undefined)
 
   } else {
     return coreInitialize(initialState.options)
